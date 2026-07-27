@@ -1,0 +1,164 @@
+{
+  "batch_id": "20260713_sceneunique_water_devices",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "status": "blue_bowl_reference_frame_retry_blocked_by_external_gpu_occupancy",
+  "policy": {
+    "recommended_route": "egoinfinity_object_reconstruction_and_6dof_to_dai_or_spider",
+    "pure_dai_role": "honest_baseline_only",
+    "robot_rgb_overlay_allowed": false,
+    "robot_inpainting_allowed": false,
+    "bottom_panel": "plain_aligned_mujoco_only",
+    "demo_admission": "any_one_of_eight_plain_dai_or_spider_routes_visually_succeeds",
+    "matrix_12_of_12": "ideal_not_admission_gate"
+  },
+  "machine_constraints": {
+    "host": "236",
+    "forbidden_hosts": ["240"],
+    "host_243_forbidden_simulation_gpus": [1, 3]
+  },
+  "code": {
+    "upstream_commit": "0ef5671",
+    "runtime_commit": "8d17b47",
+    "runtime_dirty": false,
+    "screening_tests": "20/20 coordinate tests and 2/2 fresh-outcome tests passed"
+  },
+  "screening": {
+    "broad_screen": "experiments/aoe_candidate_screen_20260713_17c6512_detachable11/screen.json",
+    "strict_scene_unique_screen": "experiments/aoe_candidate_screen_20260713_4505fd6_sceneunique14/screen.json",
+    "strict_scene_unique_command": "python scripts/diagnostics/screen_aoe_retarget_candidates.py --dataset-root $AOE_DATA_ROOT --output-json experiments/screening/scene_unique_strict.json --output-csv experiments/screening/scene_unique_strict.csv --existing-experiments-root experiments --exclude-existing --exclude-existing-scenes --require-hand-object-near --top-k 2000 --run-name-mode unique",
+    "accepted_unseen_scenes": 6,
+    "accepted_scene_ids": [
+      "jar",
+      "white_kettle",
+      "water_bottle",
+      "treat_container_lid",
+      "blue_bowl",
+      "water_pump"
+    ],
+    "scene_already_run_annotations_removed": 214,
+    "broad_scene_unique_screen": "experiments/aoe_candidate_screen_20260713_8d17b47_sceneunique15/screen.json",
+    "broad_scene_unique_command": "python scripts/diagnostics/screen_aoe_retarget_candidates.py --dataset-root $AOE_DATA_ROOT --output-json experiments/screening/scene_unique_broad.json --output-csv experiments/screening/scene_unique_broad.csv --existing-experiments-root experiments --exclude-existing --exclude-existing-scenes --top-k 2000 --run-name-mode unique",
+    "broad_scene_unique_accepted_annotations": 24,
+    "manual_review_shortlist": ["blue_bowl", "black_round_bowl"],
+    "manual_review_hold": ["pink_basin", "wooden_ruler"],
+    "manual_review_reject_groups": {
+      "bbox_or_target_mismatch": ["blue_tube", "tube", "white_cup", "cleaver", "peeler", "green_comb", "hairbrush"],
+      "occluded_or_identity_unstable": ["red_storage_box", "water_bottle", "jar"],
+      "compound_or_articulated": ["white_kettle", "treat_container_lid", "kettle_lid", "gold_box_lid"],
+      "open_or_transparent_low_priority": ["white_plate", "colander", "clear_plastic_lid"]
+    }
+  },
+  "inventory": {
+    "summary": "experiments/demo_pool_summary_20260713_fa468c4_sceneunique17/demo_pool_summary.json",
+    "runtime_commit": "fa468c4",
+    "per_run_showcase_count": 12,
+    "scene_counts": {
+      "tested_matrix_scenes": 54,
+      "demo_ready_any_route": 6,
+      "dai_success_any_route": 4,
+      "spider_success_any_route": 5,
+      "recommended_route_ready": 4,
+      "matrix_complete_any_quality": 5,
+      "deliverable_12_of_12": 5
+    },
+    "demo_ready_scenes": ["beige_bowl", "black_case", "gold_box", "gold_jar", "knife", "large_white_bowl"],
+    "dai_success_scenes": ["beige_bowl", "gold_box", "gold_jar", "large_white_bowl"],
+    "spider_success_scenes": ["beige_bowl", "black_case", "gold_box", "gold_jar", "knife"],
+    "deliverable_12_of_12_scenes": ["beige_bowl", "black_case", "gold_box", "gold_jar", "knife"],
+    "partial_success_scenes": {
+      "large_white_bowl": "DAI visual success with an 11/12 matrix; not counted as deliverable_12_of_12"
+    }
+  },
+  "decisions": [
+    {
+      "scene": "water_gun",
+      "status": "rejected_preflight_visual_review",
+      "source_run": "water_gun_full_source_20260713_236_1fcdf28_pre27_ann10",
+      "evidence": "experiments/water_gun_full_source_20260713_236_1fcdf28_pre27_ann10/preflight_visual_review.json",
+      "reason": "The tracked target is disassembled into independently moving components, violating the single-rigid-6DoF assumption."
+    },
+    {
+      "scene": "water_pump",
+      "status": "rejected_sam3_no_prompt_object",
+      "source_run": "water_pump_full_source_20260713_236_4505fd6_pre28_ann3",
+      "matrix_run": "water_pump_matrix12_20260713_236_4505fd6_pre28_ann3",
+      "annotation": "poc_raw_video_20260201_191442_part000:3",
+      "risk_flags": ["detachable_or_articulated_device"],
+      "gpu_mapping": {"main": 0, "dai": 0, "sam3": 0, "sam3d": 2, "spider": 3},
+      "sam3_min_free_mib": 12000,
+      "run_spider": "none",
+      "sam3_preflight_only": true,
+      "outcome": "do_as_i_do_fresh_reconstruction_failed",
+      "sam3_prompt_frame": 152,
+      "sam3_valid_frames": 0,
+      "sam3_total_frames": 180,
+      "reason": "SAM3 detected no water-pump object on the prompt frame; no valid mask was written anywhere in the fresh clip."
+    },
+    {
+      "scene": "white_kettle",
+      "status": "rejected_rgb_review_compound_bimanual",
+      "annotation": "poc_raw_video_20260523_120216_part003:2",
+      "reason": "The two-second set-down handles the kettle body and detached lid as separate rigid components while the annotation labels one bimanual target; hand/object identity is therefore not a single rigid retarget input."
+    },
+    {
+      "scene": "blue_bowl",
+      "status": "fresh_preflight_retry_queued_clear_reference_frame",
+      "failed_source_run": "blue_bowl_full_source_20260713_236_4505fd6_pre29_ann10",
+      "failed_matrix_run": "blue_bowl_matrix12_20260713_236_4505fd6_pre29_ann10",
+      "resource_wait_source_run": "blue_bowl_full_source_20260713_236_refplace01_ann10",
+      "resource_wait_matrix_run": "blue_bowl_matrix12_20260713_236_refplace01_ann10",
+      "next_retry_source_run": "blue_bowl_full_source_20260713_236_refplace02_ann10",
+      "next_retry_matrix_run": "blue_bowl_matrix12_20260713_236_refplace02_ann10",
+      "annotation": "poc_raw_video_20260523_120216_part003:10",
+      "risk_flags": ["open_geometry", "bimanual"],
+      "first_preflight": {
+        "sam3_prompt_frame": 84,
+        "sam3_valid_frames": 43,
+        "sam3_total_frames": 168,
+        "sam3_valid_ratio": 0.25595238095238093,
+        "reason": "The default midpoint is motion blurred and has no prompt object; frames 0-42 contain an accurate blue-bowl mask."
+      },
+      "retry_policy": {
+        "duration_sec": 4.0,
+        "ref_frame_fraction": 0.25,
+        "reason": "Use the clear pre-placement interaction window and stop before the bowl becomes heavily shelf-occluded; keep the 0.70 temporal mask gate unchanged."
+      },
+      "resource_wait": {
+        "status": "aborted_before_sam3_model_load",
+        "host": "236",
+        "gpu": 0,
+        "required_free_mib": 12000,
+        "observed_free_mib": 7930,
+        "reason": "All 236 GPUs were occupied by external long-lived services; 243 had about 1.1 GiB free per GPU. The run directory is consumed and must not be reused."
+      }
+    },
+    {
+      "scene": "black_round_bowl",
+      "status": "queued_after_blue_bowl_refplace02",
+      "source_run": "black_round_bowl_full_source_20260713_236_blackbowl01_ann6",
+      "matrix_run": "black_round_bowl_matrix12_20260713_236_blackbowl01_ann6",
+      "annotation": "poc_raw_video_20260214_233830:6",
+      "risk_flags": ["open_geometry", "bimanual", "low_annotation_hand_proximity"],
+      "preflight_policy": {
+        "sam3_preflight_only": true,
+        "run_spider": "none",
+        "reason": "Contact sheet shows a single rigid bowl held by both hands throughout; open geometry keeps it stress-tier and requires strict SAM3 and scale/contact preflight before any simulation."
+      }
+    },
+    {
+      "scene": "jar",
+      "status": "rejected_rgb_review",
+      "reason": "Generic prompt, loose bbox, partial occlusion, and weak hand-bbox proximity make instance identity unreliable."
+    },
+    {
+      "scene": "water_bottle",
+      "status": "rejected_rgb_review",
+      "reason": "The annotation bbox follows a cardboard box after the bottle leaves the target region."
+    },
+    {
+      "scene": "treat_container_lid",
+      "status": "rejected_rgb_review",
+      "reason": "Uncap action is articulated and does not satisfy one rigid object trajectory."
+    }
+  ]
+}

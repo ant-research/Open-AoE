@@ -1,0 +1,162 @@
+{
+  "batch_id": "20260710_showcase06_32e9405",
+  "screen_source": "experiments/aoe_candidate_screen_20260710_showcase05/screen.json",
+  "review_source": "experiments/aoe_candidate_screen_20260710_showcase05/review_decisions.json",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "release_base_commit": "295bdc07345d6ba350c3c7beebc52f396daf35f1",
+  "migration_commit": "c95088957b1beaead007e9e19f22f25645601daa",
+  "running_baseline_commit": "32e94050e200cdae6d3e5f5ec0cabe98454ef1c5",
+  "bbox_coordinate_space": "normalized-1000",
+  "recommended_route": "egoinfinity_object_6dof_to_dai_or_spider_retargeting",
+  "dai_native_role": "baseline_only_no_ego_asset_substitution",
+  "acceptance": {
+    "matrix_cells": 12,
+    "missing_cells": 0,
+    "spider_fallback_allowed": false,
+    "sam3_prompt_mode": "semantic_text_with_bbox_instance_selection",
+    "strict_audit_required": true,
+    "visual_review_required": true
+  },
+  "machine_constraints": {
+    "forbidden_hosts": ["240"],
+    "243_forbidden_simulation_gpus": [1, 3],
+    "243_gpu_mapping": {
+      "main_cuda": 0,
+      "dai_cuda_visible_devices": 0,
+      "sam3_cuda": 4,
+      "sam3d_cuda": 5,
+      "spider_cuda_visible_devices": 6,
+      "spider_device": "cuda:0"
+    }
+  },
+  "candidates": [
+    {
+      "rank": 1,
+      "object_name": "gold jar",
+      "segment": "poc_raw_video_20260201_193100_part003",
+      "annotation_id": 20,
+      "verb": "uncap",
+      "duration_sec": 3.25,
+      "hand_type": "bimanual",
+      "task": "gold_jar_bimanual",
+      "run_token": "52e0001c_ann20",
+      "source_run": "gold_jar_full_source_20260710_243_showcase06_32e9405_ann20",
+      "matrix_run": "gold_jar_matrix12_20260710_243_showcase06_32e9405_ann20",
+      "status": "running_single_scene_gate"
+    },
+    {
+      "rank": 2,
+      "object_name": "phone",
+      "segment": "poc_raw_video_20260214_232847_part002",
+      "annotation_id": 11,
+      "verb": "grasp",
+      "duration_sec": 5.25,
+      "hand_type": "left",
+      "task": "phone_left",
+      "run_token": "db9d300c_ann11",
+      "status": "sam3_preflight_ok_late85"
+    },
+    {
+      "rank": 3,
+      "object_name": "metal bowl",
+      "segment": "poc_raw_video_20260207_204222",
+      "annotation_id": 2,
+      "verb": "lift",
+      "duration_sec": 5.25,
+      "hand_type": "right",
+      "task": "metal_bowl_right",
+      "run_token": "86d8d30b_ann2",
+      "status": "sam3_preflight_ok_with_contents_mesh_caveat"
+    },
+    {
+      "rank": 4,
+      "object_name": "large white bowl",
+      "segment": "poc_raw_video_20260502_230045_part000",
+      "annotation_id": 1,
+      "verb": "grasp",
+      "duration_sec": 5.25,
+      "hand_type": "bimanual",
+      "task": "large_white_bowl_bimanual",
+      "run_token": "5c30d37c_ann1",
+      "status": "sam3_preflight_ok_late85",
+      "screening_note": "midpoint produced a partial mask; late-85 produced the complete bowl"
+    },
+    {
+      "rank": 5,
+      "object_name": "treat container lid",
+      "segment": "poc_raw_video_20260226_215034_part000",
+      "annotation_id": 13,
+      "verb": "uncap",
+      "duration_sec": 5.25,
+      "hand_type": "bimanual",
+      "task": "treat_container_lid_bimanual",
+      "run_token": "fe1fde6c_ann13",
+      "status": "rejected_sam3_semantic_failure",
+      "screening_note": "both early-10 and late-85 prompts produced zero valid masks"
+    },
+    {
+      "rank": 6,
+      "object_name": "lamp",
+      "segment": "poc_raw_video_20260329_143722_part000",
+      "annotation_id": 3,
+      "verb": "grasp",
+      "duration_sec": 4.25,
+      "hand_type": "left",
+      "task": "lamp_left",
+      "run_token": "26c94fe8_ann3",
+      "status": "rejected_prompt_frame_final_mask_missing",
+      "screening_note": "prompt inference found the lamp but frame_stats at the prompt frame was invalid and empty"
+    },
+    {
+      "rank": 7,
+      "object_name": "knife",
+      "segment": "poc_raw_video_20260501_185231_part000",
+      "annotation_id": 1,
+      "verb": "grasp",
+      "duration_sec": 6.0,
+      "hand_type": "left",
+      "task": "knife_left",
+      "run_token": "9a67c57d_ann1",
+      "status": "sam3_preflight_ok_thin_object_stress"
+    },
+    {
+      "rank": 8,
+      "object_name": "red-labeled bottle",
+      "segment": "poc_raw_video_20260201_193100_part009",
+      "annotation_id": 3,
+      "verb": "grasp",
+      "duration_sec": 6.0,
+      "hand_type": "right",
+      "task": "red_labeled_bottle_right",
+      "run_token": "271e9aae_ann3",
+      "status": "rejected_sam3_semantic_failure",
+      "screening_note": "late-85 text prompt produced zero valid masks"
+    },
+    {
+      "rank": 9,
+      "object_name": "frying pan",
+      "segment": "poc_raw_video_20260207_202326_part011",
+      "annotation_id": 2,
+      "verb": "set_down",
+      "duration_sec": 2.25,
+      "hand_type": "bimanual",
+      "task": "frying_pan_bimanual",
+      "run_token": "78ab0d76_ann2",
+      "status": "sam3_preflight_ok_scale_tracking_stress",
+      "screening_note": "reference mask is complete; early masks contain fragments and the pan exits frame late"
+    },
+    {
+      "rank": 10,
+      "object_name": "bottle of cooking wine",
+      "segment": "poc_raw_video_20260207_203314",
+      "annotation_id": 6,
+      "verb": "lift",
+      "duration_sec": 3.25,
+      "hand_type": "left",
+      "task": "bottle_of_cooking_wine_left",
+      "run_token": "4f750f74_ann6",
+      "status": "sam3_preflight_ok_same_prompt_disambiguation_control",
+      "screening_note": "two prompt candidates; bbox selected the interacting blue bottle with IoU 0.25"
+    }
+  ]
+}

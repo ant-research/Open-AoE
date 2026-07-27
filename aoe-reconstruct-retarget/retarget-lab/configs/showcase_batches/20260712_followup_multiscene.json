@@ -1,0 +1,94 @@
+{
+  "batch_id": "20260712_followup_multiscene",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "policy": {
+    "recommended_route": "egoinfinity_object_reconstruction_and_6dof_to_dai_or_spider",
+    "required_matrix_cells": 12,
+    "required_dai_plain_videos": 4,
+    "required_spider_plain_videos": 4,
+    "pre_simulation_gate": "retarget_input_qc",
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "bottom_panel": "plain_aligned_mujoco_only",
+    "bimanual_gate": "both_hands_min_3_overlap_frames_and_union_geometry_offset_lte_0.3m"
+  },
+  "machine_constraints": {
+    "forbidden_hosts": ["240"],
+    "host_243_forbidden_simulation_gpus": [1, 3]
+  },
+  "active_runs": [
+    {
+      "scene": "frying_pan",
+      "source_run": "frying_pan_full_source_20260712_236_bimanualfix02_7d753d4_ann2",
+      "matrix_run": "frying_pan_matrix12_20260712_236_bimanualfix02_7d753d4_ann2",
+      "runtime_commit": "7d753d4effdfb460b313f7cb6c262ac06a542c9f",
+      "host": "236",
+      "gpu_mapping": {"main": 4, "dai": 4, "sam3": 4, "sam3d": 5, "spider": 4},
+      "hand_type": "bimanual",
+      "status": "fresh_rerun_after_camera_frame_and_bimanual_fixes"
+    }
+  ],
+  "preflight_rejections": [
+    {
+      "scene": "pink_jar",
+      "source_run": "pink_jar_full_source_20260712_236_promptalias01_ad64992_ann24",
+      "reason": "sam3_generic_jar_prompt_also_zero_valid_mask_ratio",
+      "annotation_object_name": "pink jar",
+      "segmentation_prompt": "jar",
+      "valid_mask_ratio": 0.0
+    },
+    {
+      "scene": "feeder_lid",
+      "source_run": "feeder_lid_full_source_20260712_236_camerabimanual02_7298461_ann9",
+      "reason": "sam3_no_prompt_frame_object",
+      "prompt": "feeder lid",
+      "prompt_frame_mask_pixels": 0
+    },
+    {
+      "scene": "pink_jar",
+      "source_run": "pink_jar_full_source_20260712_236_camerabimanual01_7298461_ann24",
+      "reason": "sam3_no_prompt_object_and_zero_valid_mask_ratio",
+      "valid_mask_ratio": 0.0,
+      "minimum_valid_mask_ratio": 0.7
+    },
+    {
+      "scene": "metal_bowl",
+      "source_run": "metal_bowl_full_source_20260712_236_inputqc02_fdf0d4f_ann2",
+      "reason": "unstable_projected_scale_and_zero_hand_object_overlap",
+      "scale_p90_p10_ratio": 1.7557323966797094,
+      "max_allowed_scale_p90_p10_ratio": 1.75,
+      "aoe_visual_overlap_frames": 0,
+      "estimated_left_visual_overlap_frames": 0,
+      "estimated_right_visual_overlap_frames": 0
+    },
+    {
+      "scene": "frying_pan",
+      "source_run": "frying_pan_full_source_20260712_236_bimanualfix01_f69c6eb_ann2",
+      "reason": "aborted_dirty_metadata_due_to_nfs_old_inode",
+      "dirty_status_short": "?? scripts/.nfs00000000b8e7300d0010b42a",
+      "next_action": "wait_for_metal_bowl_to_release_old_inode_then_fresh_rerun_with_new_suffix"
+    },
+    {
+      "scene": "frying_pan",
+      "source_run": "frying_pan_full_source_20260712_236_bimanualqc01_30d2e1f_ann2",
+      "reason": "ego_object_aligned_to_bad_dai_layout_and_bimanual_collapsed_to_right",
+      "old_required_offset_m": 1.2672197005955212,
+      "bimanual_camera_frame_probe_status": "ok",
+      "bimanual_probe_min_visual_overlap_frames": 23,
+      "bimanual_probe_scale_p90_p10_ratio": 1.2417921006785881,
+      "bimanual_probe_mean_hand_object_gap_m": 0.044006386840520224,
+      "fix_commits": ["9d9ff5d", "53deb5f"],
+      "next_action": "fresh_rerun_started"
+    },
+    {
+      "scene": "inner_box",
+      "source_run": "inner_box_full_source_20260712_236_bimanualqc02_e17c4bd_ann18",
+      "runtime_commit": "e17c4bd628f48b8d3d371d97866731680e7b91d3",
+      "reason": "sam3_no_prompt_object_and_zero_valid_mask_ratio",
+      "valid_mask_ratio": 0.0,
+      "minimum_valid_mask_ratio": 0.7,
+      "host": "236",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6}
+    }
+  ]
+}

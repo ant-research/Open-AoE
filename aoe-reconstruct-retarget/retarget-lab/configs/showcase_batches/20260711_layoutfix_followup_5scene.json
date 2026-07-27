@@ -1,0 +1,135 @@
+{
+  "batch_id": "20260711_layoutfix_followup_5scene",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "minimum_runtime_commit": "e1bcfb7b4ac23da02332d1d80d72de67de1a9c8f",
+  "launch_policy": "after_20260711_layoutfix_primary_numeric_and_plain_review",
+  "target_scene_count": 5,
+  "acceptance": {
+    "matrix_cells": 12,
+    "dai_plain_aligned_videos": 4,
+    "spider_plain_aligned_videos": 4,
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "pure_dai_object_policy": "dai_native_or_dai_native_contact_aligned_only",
+    "recommended_route": "egoinfinity_object_reconstruction_and_6dof_to_dai_or_spider",
+    "required_evidence": [
+      "reuse_12_demo_manifest.json",
+      "audit_retarget_run.json",
+      "plain_robot_visual_review.json",
+      "tracking_quality_json",
+      "fresh_run_metadata.json"
+    ]
+  },
+  "screening_evidence": {
+    "screen_json": "experiments/aoe_candidate_screen_20260710_showcase05/screen.json",
+    "contact_sheet_manifest": "experiments/aoe_candidate_screen_20260711_layoutfix_review/all_contact_sheets/contact_sheet_manifest.json",
+    "reviewed_on": "2026-07-11",
+    "review_kind": "five_frame_rgb_bbox_and_aoe_hand_root_contact"
+  },
+  "machine_constraints": {
+    "forbidden_hosts": ["240"],
+    "host_243_forbidden_simulation_gpus": [1, 3]
+  },
+  "scenes": [
+    {
+      "scene": "orange_tablet",
+      "segment": "poc_raw_video_20260201_191651_part004",
+      "annotation_id": 3,
+      "object_name": "orange tablet",
+      "task": "orange_tablet_bimanual",
+      "hand_type": "bimanual",
+      "duration_sec": 6.0,
+      "screen_score": 15.0,
+      "near_object_fraction": 1.0,
+      "classification": "recommended_candidate",
+      "visual_review": "Rigid tablet remains visible through a clear bimanual grasp.",
+      "post_preflight_classification": "reject_segmentation_unsuitable",
+      "sam3_preflight": {
+        "run": "orange_tablet_preflight_20260711_236_followup_exactcell01_ann3",
+        "status": "failed",
+        "reason": "mask valid_ratio 0.639 is below the production 0.700 threshold"
+      }
+    },
+    {
+      "scene": "black_device_base",
+      "segment": "poc_raw_video_20260201_192308_part000",
+      "annotation_id": 5,
+      "object_name": "black device base",
+      "task": "black_device_base_bimanual",
+      "hand_type": "bimanual",
+      "duration_sec": 5.0,
+      "screen_score": 15.0,
+      "near_object_fraction": 1.0,
+      "classification": "recommended_candidate",
+      "visual_review": "Rigid low-profile base is held by both hands and remains fully visible.",
+      "post_preflight_classification": "reject_segmentation_identity_missing",
+      "sam3_preflight": {
+        "run": "black_device_base_preflight_20260711_236_followup_exactcell01_ann5",
+        "status": "failed",
+        "reason": "semantic prompt detected no object; valid_ratio 0.000"
+      }
+    },
+    {
+      "scene": "brush",
+      "segment": "poc_raw_video_20260202_214320_part003",
+      "annotation_id": 10,
+      "object_name": "brush",
+      "task": "brush_right",
+      "hand_type": "right",
+      "duration_sec": 3.0,
+      "screen_score": 12.5,
+      "classification": "recommended_candidate",
+      "visual_review": "Five-frame SAM3 review confirms one persistent long-handled brush from approach through right-hand grasp; elongated geometry remains a scale-risk diagnostic.",
+      "post_preflight_classification": "full_run_launched",
+      "sam3_preflight": {
+        "run": "brush_preflight_20260711_236_followup_exactcell01_ann10",
+        "status": "ok_with_manual_review",
+        "warning": "selected mask bbox IoU 0.090 is below the 0.100 review threshold",
+        "contact_sheet": "aoe_retarget_demo_videos/_screening/20260711_followup_exactcell01/brush_preflight_contact_exactcell01.jpg"
+      },
+      "fresh_run": {
+        "source_run": "brush_full_source_20260711_236_exactcell01_34e9935_ann10",
+        "matrix_run": "brush_matrix12_20260711_236_exactcell01_34e9935_ann10",
+        "runtime_commit": "34e993592eecf2297b7d5e831e7f87f8b46a9490",
+        "gpu_mapping": {
+          "main_cuda": 4,
+          "sam3_cuda": 4,
+          "sam3d_cuda": 5,
+          "spider_cuda_visible_devices": 4
+        }
+      }
+    },
+    {
+      "scene": "small_white_bottle",
+      "segment": "poc_raw_video_20260506_210508_part001",
+      "annotation_id": 11,
+      "object_name": "small white bottle",
+      "task": "small_white_bottle_left",
+      "hand_type": "left",
+      "duration_sec": 5.25,
+      "screen_score": 15.0,
+      "near_object_fraction": 1.0,
+      "classification": "recommended_candidate",
+      "visual_review": "Single left-hand grasp with persistent object visibility; white-on-light segmentation is the main risk.",
+      "post_preflight_classification": "reject_segmentation_identity_missing",
+      "sam3_preflight": {
+        "run": "small_white_bottle_preflight_20260711_236_followup_exactcell01_ann11",
+        "status": "failed",
+        "reason": "semantic prompt detected no object; valid_ratio 0.000"
+      }
+    },
+    {
+      "scene": "metal_bowl",
+      "segment": "poc_raw_video_20260506_222956_part001",
+      "annotation_id": 6,
+      "object_name": "metal bowl",
+      "task": "metal_bowl_bimanual",
+      "hand_type": "bimanual",
+      "duration_sec": 4.25,
+      "screen_score": 15.0,
+      "near_object_fraction": 1.0,
+      "classification": "stress_candidate",
+      "visual_review": "Clear bimanual lift, but reflective metal and food contents can corrupt single-view reconstruction."
+    }
+  ]
+}

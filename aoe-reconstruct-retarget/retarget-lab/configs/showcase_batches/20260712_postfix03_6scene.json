@@ -1,0 +1,69 @@
+{
+  "batch_id": "20260712_postfix03_6scene",
+  "status": "running",
+  "runtime_commit": "8bb600d4a697b6acccc8a89a84bf9915357a3b47",
+  "replaces_batch": "20260712_postfix_5scene",
+  "fixes_under_validation": [
+    "confirmed adapter hand cannot be flipped by conflicting derived mask labels",
+    "Ego hand-object contact alignment uses a 0.075 m gate consistent with downstream 0.05 m contact QC",
+    "DAI invalid baselines preserve the complete source timeline after warmup"
+  ],
+  "policy": {
+    "source_runs": "fresh",
+    "run_spider": "all",
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "acceptance": "12_of_12_with_plain_aligned_robot_videos_and_explicit_numeric_status"
+  },
+  "launch": {
+    "host": "236",
+    "started_at": "2026-07-12T07:08:51+08:00",
+    "driver_pid": 1397077,
+    "batch_status": "experiments/_batch_postfix03_8bb600d/status.tsv",
+    "driver_log": "experiments/_batch_postfix03_8bb600d_driver.log"
+  },
+  "lanes": [
+    {
+      "name": "lane_a",
+      "gpu_mapping": {"main": 2, "dai": 2, "sam3": 2, "sam3d": 3, "spider": 2},
+      "runs": [
+        {
+          "scene": "gold_jar",
+          "source_run": "gold_jar_full_source_20260712_236_postfix03_8bb600d_ann20",
+          "matrix_run": "gold_jar_matrix12_20260712_236_postfix03_8bb600d_ann20"
+        },
+        {
+          "scene": "black_case",
+          "source_run": "black_case_full_source_20260712_236_postfix03_8bb600d_ann12",
+          "matrix_run": "black_case_matrix12_20260712_236_postfix03_8bb600d_ann12"
+        },
+        {
+          "scene": "phone",
+          "source_run": "phone_full_source_20260712_236_postfix03_8bb600d_ann11",
+          "matrix_run": "phone_matrix12_20260712_236_postfix03_8bb600d_ann11"
+        }
+      ]
+    },
+    {
+      "name": "lane_b",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6},
+      "runs": [
+        {
+          "scene": "gold_box",
+          "source_run": "gold_box_full_source_20260712_236_postfix03_8bb600d_ann3",
+          "matrix_run": "gold_box_matrix12_20260712_236_postfix03_8bb600d_ann3"
+        },
+        {
+          "scene": "blue_inhaler",
+          "source_run": "blue_inhaler_full_source_20260712_236_postfix03_8bb600d_ann25",
+          "matrix_run": "blue_inhaler_matrix12_20260712_236_postfix03_8bb600d_ann25"
+        },
+        {
+          "scene": "black_spray_bottle",
+          "source_run": "black_spray_bottle_full_source_20260712_236_postfix03_8bb600d_ann9",
+          "matrix_run": "black_spray_bottle_matrix12_20260712_236_postfix03_8bb600d_ann9"
+        }
+      ]
+    }
+  ]
+}

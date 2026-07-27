@@ -12,6 +12,15 @@ cd "$AOE_RETARGET_LAB_ROOT"
 source local_env.sh
 ```
 
+Before the first run on a new machine:
+
+```bash
+python3 scripts/check_third_party_config.py --json third_party_config_report.json
+```
+
+The fresh AoE runner accepts either `AOE_DATA_ROOT` from `local_env.sh` or an
+explicit `--dataset-root /path/to/poc_deliver`.
+
 All generated outputs must stay under:
 
 ```text
@@ -33,6 +42,29 @@ traj_<egoinfinity|do_as_i_do>__hand_<aoe|estimated>__retarget_<egoinfinity|do_as
 `hand_source` belongs to the shared retargeting input layer. It is not owned by
 any single retargeter. Each cell manifest should record the actual hand source
 asset used by that cell.
+
+### 1.1 Fresh AoE automatic and direct entry
+
+```bash
+python3 scripts/run_fresh_aoe_auto_window.py \
+  --runner scripts/run_fresh_aoe_scene_12_demos.sh \
+  --experiments-root experiments \
+  --source-run <source_run> --matrix-run <matrix_run> \
+  --window-selection-mode auto \
+  --candidate-durations-sec 6.0,5.0,4.0,3.0 \
+  --manifest experiments/<source_run>_window.json -- \
+  --dataset-root "$AOE_DATA_ROOT" \
+  --scene <scene> --segment <segment> --annotation-id <id> \
+  --object-name "<object prompt>" --task <task> \
+  --hand-type <left|right|bimanual> \
+  --anchor-hand <left|right|bimanual> \
+  --ref-source-frame <absolute_frame> --run-spider all --compose
+```
+
+Replace `auto` with `direct`, remove `--candidate-durations-sec`, and add
+`--direct-duration-sec <seconds>` to use a user-audited clip window. Direct
+mode bypasses only automatic window search, not reconstruction or route/input
+validation.
 
 ## 2. Recommended Entrypoint: Full 12 Demos
 
@@ -91,11 +123,55 @@ Useful options:
 | --- | --- |
 | `--source-run` | skip the two full pipelines and reuse `experiments/<source_run>/` |
 | `--matrix-run-name` | output run for the 12 demos |
-| `--run-spider none|do_as_i_do|all` | control SPIDER cells |
+| `--run-spider none\|do_as_i_do\|all` | control SPIDER cells |
 | `--duration <sec>` | trim composed videos; `0` keeps source duration |
-| `--mode symlink|hardlink|copy` | how reused assets are materialized |
+| `--mode symlink\|hardlink\|copy` | how reused assets are materialized |
 | `--force-spider` | rerun existing SPIDER cells |
 | `--no-spider-fallback` | do not reuse Do-as-I-Do SPIDER robot videos for EgoInfinity+SPIDER display cells |
+| `--allow-spider-mjwp-fallback-video` | diagnostic only; allow SPIDER IK/object-reference fallback videos into composed cells |
+
+### 2.1 Run one selected combination
+
+DAI/Sharpa, using the route-specific prepared raw directory:
+
+```bash
+cell=traj_<egoinfinity|do_as_i_do>__hand_<aoe|estimated>__retarget_do_as_i_do
+output_root=experiments/<matrix_run>/intermediates/retargeting/do_as_i_do/$cell/retargeting_outputs
+
+scripts/run_do_as_i_do_official_retarget.sh \
+  --raw-dir <route_specific_raw_dir> \
+  --task <task> \
+  --output-root-dir "$output_root" \
+  --cuda-visible-devices <gpu> \
+  --egl-device-id 0 --headless --no-wait
+
+$RETARGETING_PYTHON scripts/index_cell_assets.py \
+  --run-name <matrix_run> \
+  --trajectory-6dof <egoinfinity|do_as_i_do> \
+  --hand-source <aoe|estimated> \
+  --retargeting do_as_i_do \
+  --task <task> --hand-type <left|right|bimanual> --robot sharpa
+```
+
+The pristine native wrapper deliberately does not accept matrix axes. The
+prepared input binds the route; `index_cell_assets.py` records that binding
+only after native DAI succeeds.
+
+SPIDER/XHand, after keypoints, object mesh, adapter provenance, and robot assets
+have been indexed under the same run:
+
+```bash
+scripts/run_spider_retarget.sh \
+  --run-name <matrix_run> \
+  --trajectory-6dof <egoinfinity|do_as_i_do> \
+  --hand-source <aoe|estimated> \
+  --task <task> --hand-type <left|right|bimanual> \
+  --robot-type xhand --max-sim-steps -1
+```
+
+The EgoInfinity/G1 native combination uses `run_egoinfinity_retarget.sh`, as
+documented below. Do not label an externally assembled hand route as a native
+EgoInfinity route without an explicit matrix-adapter asset binding.
 
 ## 3. Two Full Pipelines Only
 
@@ -176,10 +252,10 @@ Useful environment variables:
 
 | Variable | Meaning |
 | --- | --- |
-| `EGOINFINITY_OBJECT_SELECTION_MODE=all|best` | keep all stable instances or select one |
+| `EGOINFINITY_OBJECT_SELECTION_MODE=all\|best` | keep all stable instances or select one |
 | `EGOINFINITY_TARGET_POINT=x,y` | pixel hint for same-prompt object ranking |
 | `EGOINFINITY_MAX_CENTROID_JUMP_PX` | object continuity threshold |
-| `EGOINFINITY_POST_SCALE_SANITY=0|1` | run post scale sanity |
+| `EGOINFINITY_POST_SCALE_SANITY=0\|1` | run post scale sanity |
 | `EGOINFINITY_SCALE_SANITY_THRESHOLD` | mask/depth scale sanity threshold |
 | `EGOINFINITY_RESET_OUTPUT=1` | delete current clip cache and rerun |
 | `SAM3_WORKER_SOCKET`, `SAM3D_WORKER_SOCKET` | reuse external workers |
@@ -219,6 +295,15 @@ video_segmentation/masks/frame_*_masks/<object>/<object>.obj
 */all_hand_meshes.npz
 ```
 
+`left_joints` / `right_joints` inside `all_hand_meshes.npz` must use the
+`N x 21 x 3` OpenPose/WiLoR hand-joint layout. Some Do-as-I-Do trials only
+store standard MANO `N x 16 x 3` joints; adapt those inputs in the current
+experiment's prepared raw directory before calling the official
+`retargeting/launch.py`. The adapter should preserve the wrist and three
+joints per finger from MANO-16, then add five fingertip joints from the
+same-frame MANO vertices. This is hand-joint input-format adaptation; it must
+not change object scale, pose, or mesh geometry.
+
 Outputs:
 
 ```text
@@ -233,7 +318,7 @@ experiments/<run>/logs/trajectory_6dof_do_as_i_do.log
 To generate Do-as-I-Do overlay/depth/pure-mesh diagnostics:
 
 ```bash
-$RETARGETING_PYTHON scripts/materialize_do_as_i_do_visuals.py \
+$RETARGETING_PYTHON scripts/review/materialize_do_as_i_do_visuals.py \
   --run-name <run_name> \
   --clip-dir <do_as_i_do_clip_dir> \
   --task <task_name> \
@@ -254,13 +339,12 @@ experiments/<run>/intermediates/trajectory_6dof/do_as_i_do/reconstruction/mesh_p
 ```bash
 scripts/run_do_as_i_do_official_retarget.sh \
   --raw-dir <complete_do_as_i_do_raw_dir> \
-  --run-name <run_name> \
   --task <task_name> \
-  --trajectory-6dof do_as_i_do \
-  --hand-source estimated \
-  --hand-type bimanual \
-  --robot-type sharpa \
-  --max-sim-steps -1
+  --output-root-dir experiments/<run_name>/intermediates/retargeting/do_as_i_do/<cell>/retargeting_outputs \
+  --cuda-visible-devices <gpu> \
+  --egl-device-id 0 \
+  --headless \
+  --no-wait
 ```
 
 Main upstream entrypoint:
@@ -270,8 +354,9 @@ third_party/do-as-i-do/retargeting/launch.py
 ```
 
 Do not use direct wrapper calls to `decompose_mesh`, `generate_scene`,
-`solve_ik`, and `optimize_physics` as the main path. Use `--force` for the
-first full run if needed; avoid forcing the full chain during quick reruns.
+`solve_ik`, and `optimize_physics` as the main path. The output path must not
+already exist; the wrapper stages a disposable clean pinned checkout, runs the
+unchanged native `launch.py`, and atomically publishes its output.
 
 Outputs:
 
@@ -288,7 +373,7 @@ If the official entrypoint does not emit mp4, the wrapper renders from:
 scene.xml + trajectory_mjwp.npz
 ```
 
-using `scripts/render_mujoco_trajectory.py`.
+using `scripts/diagnostics/render_mujoco_trajectory.py`.
 
 ## 7. SPIDER / XHand Retargeting
 
@@ -375,7 +460,7 @@ experiments/<run>/assets/cells/<cell>/asset_manifest.json
 Compose the synchronized video:
 
 ```bash
-$EGOINFINITY_PYTHON scripts/compose_triptych.py \
+$EGOINFINITY_PYTHON scripts/review/compose_triptych.py \
   --overlay experiments/<run>/cells/<cell>/overlay.mp4 \
   --depth experiments/<run>/cells/<cell>/depth.mp4 \
   --robot experiments/<run>/cells/<cell>/robot.mp4 \

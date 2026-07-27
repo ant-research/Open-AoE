@@ -1,0 +1,89 @@
+{
+  "batch_id": "20260711_inputqc01_4scene",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "github_commit": "054620f87f0a3a8518ef78149ab79e8bec088163",
+  "runtime_commit": "cbe7da2b0e154aefe54dc7f5e62ee0c3fc410539",
+  "run_suffix": "inputqc01_cbe7da2",
+  "policy": {
+    "recommended_route": "egoinfinity_object_reconstruction_and_6dof_to_dai_or_spider",
+    "required_matrix_cells": 12,
+    "required_ego_hand_sources": ["aoe", "estimated"],
+    "pre_simulation_gate": "retarget_input_qc",
+    "max_constant_hoi_offset_m": 0.3,
+    "max_projected_scale_p90_p10_ratio": 1.75,
+    "minimum_visual_overlap_frames": 3,
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "pure_dai_role": "baseline_only_no_ego_asset_substitution"
+  },
+  "machine_constraints": {
+    "forbidden_hosts": ["240"],
+    "host_243_forbidden_simulation_gpus": [1, 3]
+  },
+  "active_runs": [],
+  "preflight_rejections": [
+    {
+      "scene": "black_case",
+      "source_run": "black_case_full_source_20260711_243_exactcell01_34e9935_ann12",
+      "reason": "object_scale_ratio_temporally_unstable",
+      "scale_multiplier_median": 0.6349575434,
+      "scale_p90_p10_ratio": 1.9565384722,
+      "observed_dai_lost_frame_fraction": 0.8088235294,
+      "observed_dai_final_position_error_m": 2.174720099
+    },
+    {
+      "scene": "gold_jar",
+      "source_run": "gold_jar_full_source_20260711_236_exactcell01_34e9935_ann20",
+      "reason": "hoi_coordinate_offset_exceeds_max",
+      "required_constant_offset_m": 0.8106280902,
+      "max_allowed_offset_m": 0.3
+    },
+    {
+      "scene": "brush",
+      "source_run": "brush_full_source_20260711_236_exactcell01_34e9935_ann10",
+      "reason": "unstable_scale_and_no_visual_hand_object_overlap",
+      "scale_p90_p10_ratio": 3.1561272613,
+      "visual_overlap_frames": 0
+    },
+    {
+      "scene": "mug",
+      "source_run": "mug_full_source_20260711_236_inputqc01_cbe7da2_ann3",
+      "reason": "sam3_prompt_gate_failed_no_prompt_object_and_target_switch",
+      "prompt_frame_idx": 133,
+      "prompt_frame_mask_pixels": 0,
+      "max_temporal_centroid_jump_px": 300.739501953125,
+      "max_allowed_temporal_centroid_jump_px": 100.0
+    },
+    {
+      "scene": "blue_inhaler",
+      "source_run": "blue_inhaler_full_source_20260711_243_inputqc01_cbe7da2_ann25",
+      "reason": "hoi_coordinate_offset_exceeds_max",
+      "selected_hand_before_tie_break_fix": "bimanual",
+      "selected_hand_after_tie_break_fix": "left",
+      "left_visual_overlap_frames": 13,
+      "right_visual_overlap_frames": 5,
+      "required_constant_offset_m": 0.7134184044478795,
+      "max_allowed_offset_m": 0.3,
+      "scale_p90_p10_ratio": 1.6422737742858784
+    },
+    {
+      "scene": "phone",
+      "source_run": "phone_full_source_20260711_236_inputqc01_cbe7da2_ann11",
+      "reason": "object_scale_ratio_temporally_unstable",
+      "aoe_selected_hand": "left",
+      "aoe_visual_overlap_frames": 14,
+      "scale_p90_p10_ratio": 1.8419603894860708,
+      "max_allowed_scale_p90_p10_ratio": 1.75
+    },
+    {
+      "scene": "black_spray_bottle",
+      "source_run": "black_spray_bottle_full_source_20260711_236_inputqc01_cbe7da2_ann9",
+      "reason": "weak_visual_hand_object_overlap",
+      "scale_p90_p10_ratio": 1.4621574983452725,
+      "scale_multiplier": 1.1473631147298526,
+      "aoe_hand_overlap_frames": 1,
+      "estimated_hand_overlap_frames": 0,
+      "minimum_required_overlap_frames": 3
+    }
+  ]
+}

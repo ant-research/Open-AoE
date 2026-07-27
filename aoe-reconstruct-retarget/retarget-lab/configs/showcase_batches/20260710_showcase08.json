@@ -1,0 +1,591 @@
+{
+  "batch_id": "20260710_showcase08_cfd96cd",
+  "parent_screening_batch": "20260710_showcase06_32e9405",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "release_base_commit": "295bdc07345d6ba350c3c7beebc52f396daf35f1",
+  "development_commit": "cfd96cd952db02b7e7b4254b0bdf7cadd72fcac9",
+  "latest_pipeline_commit": "38ee8a12bf730531f64349c0115f71036babc820",
+  "retarget_only_policy_commit": "4d541fd38e9ebe5a7051513b39348f5f40e40dff",
+  "target_showcase_count": 10,
+  "accepted_candidate_count": 6,
+  "remaining_candidate_slots": 4,
+  "completed_showcase_count": 0,
+  "remaining_full_run_validations": 10,
+  "count_semantics": "accepted_candidate_count records active candidates that passed source RGB and SAM3 preflight and have not failed a later gate; rejected candidates remain as historical entries. completed_showcase_count increases after fresh 12/12 completion, provenance and alignment checks, and passing temporal review of all eight DAI/SPIDER plain MuJoCo cells; robot-on-RGB evidence is prohibited",
+  "additional_screening": {
+    "batch": "20260711_showcase17_hand_near",
+    "branch_head": "f9fbe79",
+    "require_hand_object_near": true,
+    "accepted_by_numeric_screen": 53,
+    "new_shortlist_visually_reviewed": 6,
+    "new_shortlist_accepted": 0,
+    "evidence": "aoe_retarget_demo_videos/_screening/20260711_showcase17_hand_near",
+    "decision": "hand proximity and numeric score are necessary but do not override target identity, material, occlusion, or interaction visual review"
+  },
+  "recommended_route": "egoinfinity_object_6dof_to_dai_or_spider_retargeting",
+  "dai_native_role": "baseline_only_no_ego_asset_substitution",
+  "acceptance": {
+    "matrix_cells": 12,
+    "missing_cells": 0,
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "bottom_panel_policy": "plain_aligned_mujoco_only",
+    "demo_inclusion_policy": "retarget_only_plain_mujoco_v1",
+    "plain_robot_reviewed_cell_count_min": 8,
+    "numeric_threshold_failure_blocks_demo": false,
+    "retarget_success_evidence": [
+      "object_pose_error",
+      "hand_object_relative_transform_error",
+      "contact_retention",
+      "lost_frame_fraction",
+      "warmup_time_alignment",
+      "plain_robot_video_temporal_review"
+    ],
+    "sam3_prompt_mode": "semantic_text_with_bbox_instance_selection",
+    "scale_anchor_hand_must_be_resolved": true,
+    "strict_audit_required": true,
+    "visual_review_required": true,
+    "temporal_visual_review_checks": [
+      "same_target_instance_in_early_reference_late_frames",
+      "target_visible_without_mid_clip_disappearance",
+      "mask_covers_the_rigid_target_not_detached_parts_or_contents",
+      "reference_view_contains_reconstructable_object_geometry",
+      "at_least_one_hand_sustains_physical_interaction"
+    ]
+  },
+  "machine_constraints": {
+    "forbidden_hosts": ["240"],
+    "243_forbidden_simulation_gpus": [1, 3],
+    "243_gpu_mapping": {
+      "main_cuda": 0,
+      "dai_cuda_visible_devices": 0,
+      "sam3_cuda": 4,
+      "sam3d_cuda": 2,
+      "spider_cuda_visible_devices": 6,
+      "spider_device": "cuda:0"
+    }
+  },
+  "fresh_rerun_queue_after_showcase19": [
+    {
+      "scene": "gold_jar",
+      "segment": "poc_raw_video_20260201_193100_part003",
+      "annotation_id": 20,
+      "task": "gold_jar_bimanual",
+      "hand_type": "bimanual"
+    },
+    {
+      "scene": "phone",
+      "segment": "poc_raw_video_20260214_232847_part002",
+      "annotation_id": 11,
+      "task": "phone_left",
+      "hand_type": "left"
+    },
+    {
+      "scene": "black_case",
+      "segment": "poc_raw_video_20260202_215703_part000",
+      "annotation_id": 12,
+      "task": "black_case_bimanual",
+      "hand_type": "bimanual"
+    },
+    {
+      "scene": "blue_inhaler",
+      "segment": "poc_raw_video_20260201_193100_part002",
+      "annotation_id": 25,
+      "task": "blue_inhaler_left",
+      "hand_type": "left"
+    },
+    {
+      "scene": "black_spray_bottle",
+      "segment": "poc_raw_video_20260226_215034_part000",
+      "annotation_id": 9,
+      "task": "black_spray_bottle_right",
+      "hand_type": "right"
+    }
+  ],
+  "candidates": [
+    {
+      "rank": 1,
+      "object_name": "gold jar",
+      "segment": "poc_raw_video_20260201_193100_part003",
+      "annotation_id": 20,
+      "verb": "uncap",
+      "duration_sec": 3.25,
+      "hand_type": "bimanual",
+      "task": "gold_jar_bimanual",
+      "source_run": "gold_jar_full_source_20260710_243_showcase08b_cfd96cd_ann20",
+      "matrix_run": "gold_jar_matrix12_20260710_243_showcase08b_cfd96cd_ann20",
+      "status": "rejected_post_retarget_gate",
+      "showcase_eligible": false,
+      "supersedes": "gold_jar_full_source_20260710_243_showcase06_32e9405_ann20",
+      "post_retarget_gate": {
+        "matrix_composed": 6,
+        "matrix_expected": 12,
+        "dai_native_to_dai_tracking": "invalid_late_object_flyout",
+        "egoinfinity_to_dai_tracking": "invalid_late_object_flyout",
+        "dai_native_to_spider_hand_aoe": "ok",
+        "dai_native_to_spider_hand_estimated": "ok",
+        "egoinfinity_to_spider_hand_aoe": "invalid_object_pose_tracking",
+        "egoinfinity_to_spider_hand_estimated": "invalid_object_pose_tracking",
+        "decision": "reject_showcase_keep_as_failure_stress_case",
+        "quality_method": "mujoco_mesh_object_body_world_pose"
+      },
+      "resource_retries": [
+        {
+          "source_run": "gold_jar_full_source_20260710_243_showcase08_cfd96cd_ann20",
+          "status": "invalid",
+          "reason": "GPU5 had 18589MiB free, below the 19000MiB SAM3D gate"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "object_name": "phone",
+      "segment": "poc_raw_video_20260214_232847_part002",
+      "annotation_id": 11,
+      "verb": "grasp",
+      "duration_sec": 5.25,
+      "hand_type": "left",
+      "task": "phone_left",
+      "source_run": "phone_full_source_20260711_243_showcase13_bc5e631_ann11",
+      "matrix_run": "phone_matrix12_20260711_243_showcase13_bc5e631_ann11",
+      "status": "rejected_post_retarget_gate",
+      "showcase_eligible": false,
+      "post_retarget_gate": {
+        "matrix_composed": 0,
+        "egoinfinity_object_tracking_visual_review": "ok",
+        "dai_native_object_tracking": "invalid_constant_near_pi_rotation_error",
+        "egoinfinity_to_dai_refinement": "invalid_nonfinite_optimizer_rewards",
+        "nonfinite_optimizer_log_lines": 83,
+        "decision": "reject_showcase_keep_as_dai_bimanual_refinement_failure",
+        "nas_output_pruned_after_local_evidence_archive": true
+      }
+    },
+    {
+      "rank": 3,
+      "object_name": "metal bowl",
+      "segment": "poc_raw_video_20260207_204222",
+      "annotation_id": 2,
+      "verb": "lift",
+      "duration_sec": 5.25,
+      "hand_type": "right",
+      "task": "metal_bowl_right",
+      "status": "sam3_preflight_ok_with_contents_mesh_caveat"
+    },
+    {
+      "rank": 4,
+      "object_name": "large white bowl",
+      "segment": "poc_raw_video_20260502_230045_part000",
+      "annotation_id": 1,
+      "verb": "grasp",
+      "duration_sec": 5.25,
+      "hand_type": "bimanual",
+      "task": "large_white_bowl_bimanual",
+      "status": "rejected_temporal_target_switch",
+      "showcase_eligible": false,
+      "failed_run": "large_white_bowl_full_source_20260711_236_showcase20_284a25d_ann1",
+      "temporal_gate": {
+        "max_centroid_jump_px": 131.716552734375,
+        "max_allowed_centroid_jump_px": 100.0,
+        "worst_consecutive_mask_area_ratio": 2.135095192558463,
+        "max_allowed_consecutive_mask_area_ratio": 2.0,
+        "visual_failure_frame": 79,
+        "reason": "SAM3 target identity switches from the bowl to disconnected hand regions under occlusion"
+      }
+    },
+    {
+      "rank": 5,
+      "object_name": "knife",
+      "segment": "poc_raw_video_20260501_185231_part000",
+      "annotation_id": 1,
+      "verb": "grasp",
+      "duration_sec": 6.0,
+      "hand_type": "left",
+      "task": "knife_left",
+      "status": "sam3_preflight_ok_thin_object_stress"
+    },
+    {
+      "rank": 6,
+      "object_name": "frying pan",
+      "segment": "poc_raw_video_20260207_202326_part011",
+      "annotation_id": 2,
+      "verb": "set_down",
+      "duration_sec": 2.25,
+      "hand_type": "bimanual",
+      "task": "frying_pan_bimanual",
+      "status": "sam3_preflight_ok_scale_tracking_stress"
+    },
+    {
+      "rank": 7,
+      "object_name": "bottle of cooking wine",
+      "segment": "poc_raw_video_20260207_203314",
+      "annotation_id": 6,
+      "verb": "lift",
+      "duration_sec": 3.25,
+      "hand_type": "left",
+      "task": "bottle_of_cooking_wine_left",
+      "status": "sam3_preflight_ok_same_prompt_disambiguation_control"
+    },
+    {
+      "rank": 8,
+      "object_name": "white product box",
+      "segment": "poc_raw_video_20260214_233559_part001",
+      "annotation_id": 24,
+      "verb": "hold",
+      "duration_sec": 5.0,
+      "hand_type": "bimanual",
+      "task": "white_product_box_bimanual",
+      "source_run": "white_product_box_full_source_20260711_243_showcase19_e6fbb7c_ann24",
+      "matrix_run": "white_product_box_matrix12_20260711_243_showcase19_e6fbb7c_ann24",
+      "status": "fresh_retarget_only_run_in_progress",
+      "showcase_eligible": true,
+      "run_commit": "e6fbb7cb0004b2c847d03e2a08e25e32f75a3e5b",
+      "run_dirty": false,
+      "gpu_mapping": {
+        "main": 0,
+        "dai": 0,
+        "sam3": 5,
+        "sam3d": 2,
+        "spider_visible": 4,
+        "spider_device": "cuda:0"
+      },
+      "prompt_gate": {
+        "mask_to_bbox_area_ratio": 0.9371021412037037,
+        "prompt_candidate_count": 2,
+        "selected_bbox_iou": 0.33462214411247804,
+        "selected_mask_pixels": 51818
+      },
+      "visual_review": {
+        "same_target_instance_in_early_reference_late_frames": true,
+        "mask_covers_white_eiiq_product_box_not_background_shipping_boxes": true,
+        "reviewed_frames": [0, 75, 127, 149],
+        "local_evidence": "aoe_retarget_demo_videos/_qa/white_product_box_showcase18/sam3_frames"
+      },
+      "aborted_attempts": [
+        {
+          "source_run": "white_product_box_full_source_20260711_243_showcase18_ff75360_ann24",
+          "matrix_run": "white_product_box_matrix12_20260711_243_showcase18_ff75360_ann24",
+          "aborted_at": "2026-07-11T11:20:02+08:00",
+          "reason": "old wrapper would have generated a prohibited robot RGB overlay; stopped during source tracking and never resumed"
+        }
+      ]
+    },
+    {
+      "rank": 9,
+      "object_name": "black spray bottle",
+      "segment": "poc_raw_video_20260226_215034_part000",
+      "annotation_id": 9,
+      "verb": "uncap",
+      "duration_sec": 6.0,
+      "hand_type": "right",
+      "task": "black_spray_bottle_right",
+      "source_run": "black_spray_bottle_full_source_20260711_243_showcase17_700306c_ann9",
+      "matrix_run": "black_spray_bottle_matrix12_20260711_243_showcase17_700306c_ann9",
+      "status": "rejected_post_retarget_gate",
+      "showcase_eligible": false,
+      "run_commit": "700306ca7fb9530c86d4661f19115979e00533b8",
+      "run_dirty": false,
+      "gpu_mapping": {
+        "main": 0,
+        "dai": 0,
+        "sam3": 5,
+        "sam3d": 2,
+        "spider_visible": 6,
+        "spider_device": "cuda:0"
+      },
+      "prompt_gate": {
+        "mask_to_bbox_area_ratio": 0.3470269097222222,
+        "prompt_candidate_count": 2,
+        "selected_bbox_iou": 0.1720682072172753,
+        "selected_mask_pixels": 15991
+      },
+      "visual_review": {
+        "same_target_instance_in_early_reference_late_frames": true,
+        "target_visible_without_mid_clip_disappearance": true,
+        "mask_covers_the_rigid_target_not_detached_parts_or_contents": true,
+        "reference_view_contains_reconstructable_object_geometry": true,
+        "at_least_one_hand_sustains_physical_interaction": true,
+        "notes": "The hand splits the visible mask into upper and lower components, but both components remain on the same PRAMY bottle across all three reviewed frames."
+      },
+      "post_retarget_gate": {
+        "matrix_cells": 12,
+        "matrix_composed": 6,
+        "egoinfinity_reconstruction": "ok_visual_reviewed_same_target",
+        "dai_native_to_dai_object_tracking": "ok",
+        "dai_native_to_dai_pos_median_m": 0.019156763475141815,
+        "dai_native_to_dai_pos_p95_m": 0.04214608115874848,
+        "dai_native_to_dai_hoi": {
+          "status": "ok",
+          "right_distance_error_p95_m": 0.05574927535708979,
+          "left_distance_error_p95_m": 0.06883580238299772,
+          "right_contact_retention": 1.0,
+          "left_contact_retention": 1.0,
+          "quality_gate_commit": "d58d49b"
+        },
+        "egoinfinity_to_dai": {
+          "status": "invalid_object_pose_tracking",
+          "pos_p95_m": 0.35338090218400564,
+          "pos_final_m": 1.2653749755178678,
+          "rot_median_rad": 1.3145995593892983,
+          "rot_p95_rad": 2.3499953355753638
+        },
+        "egoinfinity_to_spider_aoe": "invalid_native_mjwp_object_tracking",
+        "egoinfinity_to_spider_estimated": "invalid_native_mjwp_object_tracking",
+        "dai_native_to_spider": "not_run_due_native_hand_slot_lookup_bug",
+        "native_hand_slot_fix_commit": "ed087ab",
+        "fallback_used_in_composed_cells": false,
+        "decision": "reject_showcase_keep_as_reconstruction_and_pure_dai_baseline_material",
+        "local_evidence": "aoe_retarget_demo_videos/_qa/black_spray_bottle_showcase17"
+      }
+    },
+    {
+      "rank": 10,
+      "object_name": "black case",
+      "segment": "poc_raw_video_20260202_215703_part000",
+      "annotation_id": 12,
+      "verb": "set_down",
+      "duration_sec": 2.25,
+      "hand_type": "bimanual",
+      "task": "black_case_bimanual",
+      "source_run": "black_case_full_source_20260711_243_showcase15_144647a_ann12",
+      "matrix_run": "black_case_matrix12_20260711_243_showcase15_144647a_ann12",
+      "status": "rejected_post_retarget_gate",
+      "showcase_eligible": false,
+      "prompt_gate": {
+        "mask_to_bbox_area_ratio": 0.3775679976851852,
+        "prompt_candidate_count": 1,
+        "selected_bbox_iou": 0.08482188875962714,
+        "selected_mask_pixels": 31317,
+        "selected_score": 0.941605806350708
+      },
+      "temporal_gate": {
+        "valid_frames": 68,
+        "frames": 68,
+        "valid_ratio": 1.0,
+        "max_centroid_jump_px": 38.14773941040039
+      },
+      "visual_review": {
+        "same_target_instance_in_early_reference_late_frames": true,
+        "target_visible_without_mid_clip_disappearance": true,
+        "mask_covers_the_rigid_target_not_detached_parts_or_contents": true,
+        "reference_view_contains_reconstructable_object_geometry": true,
+        "at_least_one_hand_sustains_physical_interaction": true,
+        "notes": "The same rigid black case remains visible under sustained bimanual interaction across all reviewed frames."
+      },
+      "post_retarget_gate": {
+        "matrix_composed": 8,
+        "matrix_expected": 12,
+        "egoinfinity_reconstruction": "ok_visual_reviewed",
+        "dai_native_to_dai": "invalid_object_flyout",
+        "egoinfinity_to_dai": "invalid_object_flyout",
+        "dai_native_to_spider": "invalid_weak_interaction",
+        "egoinfinity_to_spider_hand_aoe": "invalid_object_pose_tracking",
+        "egoinfinity_to_spider_hand_estimated": "invalid_object_pose_tracking",
+        "decision": "reject_reconstruction_good_but_robot_retargeting_unsuitable",
+        "nas_output_pruned_after_local_evidence_archive": true
+      }
+    },
+    {
+      "rank": 11,
+      "object_name": "blue inhaler",
+      "segment": "poc_raw_video_20260201_193100_part002",
+      "annotation_id": 25,
+      "verb": "hold",
+      "duration_sec": 4.25,
+      "hand_type": "left",
+      "task": "blue_inhaler_left",
+      "source_run": "blue_inhaler_full_source_20260711_243_showcase16b_6935432_ann25",
+      "matrix_run": "blue_inhaler_matrix12_20260711_243_showcase16c_700306c_handfix01",
+      "status": "rejected_post_retarget_gate",
+      "showcase_eligible": false,
+      "run_commit": "6935432a733744df171f8c6b7fc5f95f489cadc8",
+      "run_dirty": false,
+      "retarget_rerun": {
+        "commit": "700306ca7fb9530c86d4661f19115979e00533b8",
+        "dirty": false,
+        "dirty_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "reason": "pure DAI and Ego-to-DAI hand slots are resolved independently from interaction; strong RGB mask evidence overrides an adapter bimanual proposal",
+        "pure_dai_resolved_hand": "right",
+        "ego_to_dai_resolved_hand": "left",
+        "ego_to_dai_selection_reason": "mask-overrides-adapter-bimanual",
+        "matrix_run": "blue_inhaler_matrix12_20260711_243_showcase16c_700306c_handfix01",
+        "result": {
+          "matrix_cells": 12,
+          "matrix_composed": 8,
+          "missing_spider_cells": 4,
+          "pure_dai_to_dai": "invalid_rotation_tracking",
+          "egoinfinity_to_dai": "invalid_object_flyout",
+          "all_native_spider_cells": "invalid_object_tracking",
+          "decision": "reject_showcase_keep_as_hand_selection_and_refinement_stress_case"
+        }
+      },
+      "guidance_probe": {
+        "run": "blue_inhaler_guidance_probe_20260711_243_decay095",
+        "guidance_decay_ratio": 0.95,
+        "keep_final_guidance": true,
+        "status": "invalid_worse_than_default",
+        "pos_median_m": 1.0655878536925059,
+        "pos_p95_m": 2.1350420370592027,
+        "lost_frame_fraction": 0.796875,
+        "early_termination_step": 800,
+        "requested_max_sim_steps": 1503,
+        "termination_reason": "terminate_z",
+        "post_warmup_duration_sec": 0.9949999999999788,
+        "source_clip_duration_sec": 4.233333333333333,
+        "duration_coverage_ratio": 0.23503937007873515,
+        "local_evidence": "aoe_retarget_demo_videos/_qa/blue_inhaler_guidance_probe_decay095",
+        "decision": "do_not_adopt_high_guidance_decay; reject_short_rollout_from_deliverable_alignment",
+        "alignment_fix_commit": "99842b7"
+      },
+      "gpu_mapping": {
+        "main": 4,
+        "dai": 4,
+        "sam3": 5,
+        "sam3d": 2,
+        "spider_visible": 7,
+        "spider_device": "cuda:0"
+      },
+      "gravity": {
+        "estimation_source": "geocalib",
+        "is_fallback": false,
+        "sampled_frames": 16,
+        "inliers": 12,
+        "roll_deg": -6.341369606587864,
+        "pitch_deg": -33.7443446887729,
+        "geocalib_commit": "97b8968e7798a66bf04fcf791fb535624241bda7",
+        "weights_sha256": "86d6aeacd8bbd974c59ce39f61854e00d36911c732ad89be471476fd708722ac"
+      },
+      "failed_attempts": [
+        {
+          "source_run": "blue_inhaler_full_source_20260711_243_showcase16_9ded05f_ann25",
+          "matrix_run": "blue_inhaler_matrix12_20260711_243_showcase16_9ded05f_ann25",
+          "commit": "9ded05f6c1178f168288ef9aca22ff3b26560a8a",
+          "status": "invalid_reconstruction",
+          "reason": "Fast-SAM3D zero-norm quaternion candidate crashed clustering at progress 84/127",
+          "fix_commit": "251bcbe",
+          "local_evidence": "aoe_retarget_demo_videos/_qa/blue_inhaler_showcase16/rejected_reconstruction",
+          "nas_output_pruned": true
+        }
+      ],
+      "prompt_gate": {
+        "mask_to_bbox_area_ratio": 0.6351273148148148,
+        "prompt_candidate_count": 1,
+        "selected_bbox_iou": 0.1601403828031066,
+        "selected_mask_pixels": 8780,
+        "selected_score": 0.949367105960846
+      },
+      "temporal_gate": {
+        "valid_frames": 128,
+        "frames": 128,
+        "valid_ratio": 1.0,
+        "max_centroid_jump_px": 34.60129928588867
+      },
+      "visual_review": {
+        "same_target_instance_in_early_reference_late_frames": true,
+        "target_visible_without_mid_clip_disappearance": true,
+        "mask_covers_the_rigid_target_not_detached_parts_or_contents": true,
+        "reference_view_contains_reconstructable_object_geometry": true,
+        "at_least_one_hand_sustains_physical_interaction": true,
+        "notes": "The mask follows the same blue inhaler through early, middle, and late frames; early hand occlusion does not switch the tracked instance."
+      }
+    }
+  ],
+  "rejected_replacements": [
+    "applicator tool",
+    "black device base",
+    "pink jar",
+    "small white bottle",
+    "treat container"
+  ],
+  "rejected_candidate_reviews": [
+    {
+      "object_name": "gold jar",
+      "segment": "poc_raw_video_20260201_193100_part003",
+      "annotation_id": 20,
+      "reason": "fresh source completed, but recommended EgoInfinity-to-DAI and EgoInfinity-to-SPIDER object tracking failed; strict matrix composed only 6/12"
+    },
+    {
+      "object_name": "white tube",
+      "reason": "early SAM3 mask switches to a blue drawer object despite passing aggregate temporal QA"
+    },
+    {
+      "object_name": "scoop",
+      "reason": "target is almost fully occluded inside packaging at the start of interaction"
+    },
+    {
+      "object_name": "small white bowl",
+      "reason": "multiple same-class bowls make the annotated instance ambiguous across frames"
+    },
+    {
+      "object_name": "bowl",
+      "segment": "poc_raw_video_20260321_214344",
+      "reason": "two bowls are manipulated concurrently, so object identity is ambiguous"
+    },
+    {
+      "object_name": "red firecracker box",
+      "reason": "mask splits into detachable box parts early and the reference view is edge-on; prompt mask area ratio 0.192 fails the 0.25 gate"
+    },
+    {
+      "object_name": "metal bowl",
+      "segment": "poc_raw_video_20260207_203427_part008",
+      "reason": "target disappears in the middle while the hands manipulate unrelated contents"
+    },
+    {
+      "object_name": "round plastic bowl",
+      "reason": "transparent material, food contents, and heavy occlusion violate the showcase geometry gate"
+    },
+    {
+      "object_name": "orange tablet",
+      "reason": "the target is absent in early RGB frames and SAM3 valid ratio is 0.639, below the 0.70 temporal gate"
+    },
+    {
+      "object_name": "lamp",
+      "reason": "the prompt frame and tail contain empty final masks after a SAM3 object-id mismatch; the strict prompt gate rejects the otherwise stable-looking partial track"
+    },
+    {
+      "object_name": "treat container lid",
+      "reason": "the prompt frame contains no selected object and the final mask valid ratio is zero"
+    },
+    {
+      "object_name": "pumpkin",
+      "segment": "poc_raw_video_20260201_193100_part002",
+      "annotation_id": 7,
+      "reason": "SAM3 selected no prompt-frame object; the written prompt mask is empty"
+    },
+    {
+      "object_name": "beige case",
+      "segment": "poc_raw_video_20260201_192308_part001",
+      "annotation_id": 11,
+      "reason": "the hands manipulate a blue coiled item below the annotation box instead of sustaining contact with the beige case"
+    },
+    {
+      "object_name": "inner box",
+      "segment": "poc_raw_video_20260214_232847_part002",
+      "annotation_id": 18,
+      "reason": "nested bimanual insertion and heavy hand/outer-box occlusion make the inner-box geometry and independent trajectory unsuitable"
+    },
+    {
+      "object_name": "feeder lid",
+      "segment": "poc_raw_video_20260214_233559_part000",
+      "annotation_id": 9,
+      "reason": "the annotation region mixes the lid, feeder body, loose food, and hands instead of isolating one rigid target"
+    },
+    {
+      "object_name": "small white bowl",
+      "segment": "poc_raw_video_20260502_230045_part000",
+      "annotation_id": 9,
+      "reason": "multiple nearly identical bowls overlap throughout the clip, so target identity remains ambiguous despite a near-hand score"
+    },
+    {
+      "object_name": "plastic container",
+      "segment": "poc_raw_video_20260506_210508_part001",
+      "annotation_id": 9,
+      "reason": "the target is transparent, heavily occluded, and mixed with a reflective wrapper, violating the reconstructable rigid-object gate"
+    },
+    {
+      "object_name": "yellow bleach bottle",
+      "segment": "poc_raw_video_20260505_105645_part000",
+      "annotation_id": 8,
+      "reason": "the annotation box follows cloth/hand activity while the yellow bottle remains spatially separate in reviewed frames"
+    }
+  ]
+}

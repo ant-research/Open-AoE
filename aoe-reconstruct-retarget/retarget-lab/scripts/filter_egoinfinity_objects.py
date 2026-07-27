@@ -92,9 +92,9 @@ def target_point_score(centroids: list[np.ndarray | None], target_point: tuple[f
     if target_point is None:
         return 0.0
     target = np.array(target_point, dtype=np.float32)
-    for c in centroids:
-        if c is not None:
-            return -float(np.linalg.norm(c - target))
+    distances = [float(np.linalg.norm(c - target)) for c in centroids if c is not None]
+    if distances:
+        return -float(np.median(distances))
     return -1e6
 
 
@@ -154,8 +154,8 @@ def choose_objects(
         rows_sorted = sorted(
             rows,
             key=lambda r: (
-                r["stable_prefix_len"],
                 r["target_point_score"],
+                r["stable_prefix_len"],
                 r["prompt_score"],
                 r["valid_masks"],
                 -r["max_jump_px"],

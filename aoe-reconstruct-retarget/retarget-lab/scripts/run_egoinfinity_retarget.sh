@@ -2,12 +2,17 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-python_bin="${EGOINFINITY_PYTHON:-python}"
-sam3_python="${SAM3_PYTHON:-python}"
-sam3_repo="${SAM3_REPO:-$repo_root/third_party/sam3}"
-sam3d_python="${SAM3D_PYTHON:-python}"
-sam3d_repo="${SAM3D_REPO:-$repo_root/third_party/sam-3d-objects}"
-dinov2_local_repo="${DINOV2_LOCAL_REPO:-$repo_root/third_party/dinov2}"
+python_bin="${EGOINFINITY_PYTHON:-python3}"
+sam3_python="${SAM3_PYTHON:-python3}"
+sam3_repo="${SAM3_REPO:-${repo_root}/third_party/sam3}"
+sam3d_python="${SAM3D_PYTHON:-python3}"
+sam3d_repo="${SAM3D_REPO:-${repo_root}/third_party/sam-3d-objects}"
+dinov2_local_repo="${DINOV2_LOCAL_REPO:-${repo_root}/third_party/dinov2}"
+hf_home="${HF_HOME:-${HOME}/.cache/huggingface}"
+hf_hub_cache="${HUGGINGFACE_HUB_CACHE:-$hf_home/hub}"
+transformers_cache="${TRANSFORMERS_CACHE:-$hf_home/hub}"
+hf_hub_offline="${HF_HUB_OFFLINE:-1}"
+transformers_offline="${TRANSFORMERS_OFFLINE:-1}"
 run_name="foundation_jar_visual_demo_v1"
 clip_dir=""
 clip_id="poc_raw_video_20260201_193100_part003__a1__grasp__foundation_jar"
@@ -110,8 +115,12 @@ ln -s "$work_clip" "$traj_clip"
 
 cd "$repo_root/third_party/EgoInfinity"
 PYTHONPATH="$repo_root/scripts/python_compat:$repo_root/third_party/EgoInfinity:$repo_root/third_party/EgoInfinity/third_party/sam2:$repo_root/third_party/EgoInfinity/third_party" \
-HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}" \
-TORCH_HOME="${TORCH_HOME:-$HOME/.cache/torch}" \
+HF_HOME="$hf_home" \
+HUGGINGFACE_HUB_CACHE="$hf_hub_cache" \
+TRANSFORMERS_CACHE="$transformers_cache" \
+HF_HUB_OFFLINE="$hf_hub_offline" \
+TRANSFORMERS_OFFLINE="$transformers_offline" \
+TORCH_HOME="${TORCH_HOME:-${HOME}/.cache/torch}" \
 SAM3_PYTHON="$sam3_python" \
 SAM3_REPO="$sam3_repo" \
 SAM3D_PYTHON="$sam3d_python" \
@@ -126,6 +135,11 @@ MUJOCO_GL="${MUJOCO_GL:-egl}" PYOPENGL_PLATFORM="${PYOPENGL_PLATFORM:-egl}" \
   2>&1 | tee "$exp/logs/retarget_egoinfinity_${robot}.log"
 
 if [[ -f "$work_clip/pipeline_result.pkl.gz" ]]; then
+  overlay_select_best_args=()
+  if [[ -n "$objects" && "${EGOINFINITY_OVERLAY_SELECT_BEST_OBJECT:-1}" != "0" ]]; then
+    overlay_select_best_args+=(--select-best-object)
+  fi
+
   if [[ "${EGOINFINITY_POST_SCALE_SANITY:-1}" != "0" ]]; then
     scale_tmp="$(mktemp -d /tmp/egoinfinity_scale_sanity.XXXXXX)"
     mkdir -p "$scale_tmp/favorites"
@@ -139,42 +153,33 @@ if [[ -f "$work_clip/pipeline_result.pkl.gz" ]]; then
     rm -rf "$scale_tmp"
   fi
 
-  filter_prompt="${EGOINFINITY_TARGET_PROMPT:-$objects}"
-  filter_args=(
-    --input "$work_clip/pipeline_result.pkl.gz"
-    --target-prompt "$filter_prompt"
-    --selection-mode "${EGOINFINITY_OBJECT_SELECTION_MODE:-all}"
-    --max-centroid-jump-px "${EGOINFINITY_MAX_CENTROID_JUMP_PX:-320}"
-    --backup
-    --report "$work_clip/object_filter_report.json"
-  )
-  if [[ -n "${EGOINFINITY_TARGET_POINT:-}" ]]; then
-    filter_args+=(--target-point "$EGOINFINITY_TARGET_POINT")
-  fi
-  "$python_bin" "$repo_root/scripts/filter_egoinfinity_objects.py" "${filter_args[@]}" \
-    2>&1 | tee "$exp/logs/egoinfinity_object_filter.log"
-
-  "$python_bin" "$repo_root/scripts/render_egoinfinity_mask_diagnostics.py" \
+  if ! "$python_bin" "$repo_root/scripts/review/render_egoinfinity_mask_diagnostics.py" \
     --pipeline-result "$work_clip/pipeline_result.pkl.gz" \
     --output "$work_clip/mask_overlay.mp4" \
     --fps "$fps" \
-    --target-prompt "$filter_prompt" \
-    2>&1 | tee "$exp/logs/egoinfinity_mask_overlay.log"
+    --target-prompt "$objects" \
+    "${overlay_select_best_args[@]}" \
+    2>&1 | tee "$exp/logs/egoinfinity_mask_overlay.log"; then
+    echo "[warn] EgoInfinity mask diagnostics failed; continuing with mesh overlays and retargeting outputs." \
+      | tee -a "$exp/logs/egoinfinity_mask_overlay.log" >&2
+  fi
 
-  "$python_bin" "$repo_root/scripts/render_egoinfinity_rgb_overlay.py" \
+  "$python_bin" "$repo_root/scripts/review/render_egoinfinity_rgb_overlay.py" \
     --pipeline-result "$work_clip/pipeline_result.pkl.gz" \
     --output "$work_clip/rgb_mesh_overlay.mp4" \
     --fps "$fps" \
-    --target-prompt "$filter_prompt" \
+    --target-prompt "$objects" \
     --max-centroid-jump-px "${EGOINFINITY_MAX_CENTROID_JUMP_PX:-320}" \
+    "${overlay_select_best_args[@]}" \
     2>&1 | tee "$exp/logs/egoinfinity_rgb_overlay.log"
 
-  "$python_bin" "$repo_root/scripts/render_egoinfinity_rgb_overlay.py" \
+  "$python_bin" "$repo_root/scripts/review/render_egoinfinity_rgb_overlay.py" \
     --pipeline-result "$work_clip/pipeline_result.pkl.gz" \
     --output "$work_clip/mesh_pure_camera.mp4" \
     --fps "$fps" \
-    --target-prompt "$filter_prompt" \
+    --target-prompt "$objects" \
     --max-centroid-jump-px "${EGOINFINITY_MAX_CENTROID_JUMP_PX:-320}" \
+    "${overlay_select_best_args[@]}" \
     --background black \
     2>&1 | tee "$exp/logs/egoinfinity_mesh_pure_camera.log"
 else

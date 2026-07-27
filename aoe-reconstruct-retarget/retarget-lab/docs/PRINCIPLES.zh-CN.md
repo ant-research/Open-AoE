@@ -98,14 +98,13 @@ AoE raw RGB mp4
 mask_overlay.mp4
 rgb_mesh_overlay.mp4
 mesh_pure_camera.mp4
-object_filter_report.json
 pipeline_result.pkl.gz
 retarget/g1/robot_sim.mp4
 ```
 
-同 prompt 多物体场景不要静默只保留一个物体。默认使用
-`EGOINFINITY_OBJECT_SELECTION_MODE=all`；只有单物体 debug 时才用 `best` 和
-`EGOINFINITY_TARGET_POINT=x,y`。
+EgoInfinity 输出保持上游 pipeline 原样，不再 post-filter
+`pipeline_result.pkl.gz`；物体身份错误应回到 segmentation / SAM3D /
+pose 阶段诊断。
 
 尺度问题应优先看 SAM3D canonical scale、mask+depth 物理 bbox、pose scale
 和 `scale_sanity` 输出。不要把硬缩放当最终修复。
@@ -149,8 +148,15 @@ experiments/<run>/assets/trajectory_6dof/<pipeline>/<task>/
     -> visualization_ik.mp4 / visualization_mjwp.mp4
 ```
 
-SPIDER wrapper 会把输入复制到本次实验自己的 dataset 目录。不要整目录 symlink
-其他 workspace 的历史 `mano/` 目录，避免 metadata 写回外部输出。
+SPIDER wrapper 只做输入 staging，并在 pinned、tracked-clean checkout 上依次调用
+三个原版入口。它不允许 runtime patcher 或物理优化调参。源 `trajectory_keypoints.npz`
+与 robot/object assets 在复制前后都要做哈希校验；不要整目录 symlink 其他 workspace
+的历史 `mano/` 目录，避免 metadata 写回外部输出。
+
+`ref_dt` 必须保持 DAI 输入的原始帧网格。若原版 MJWP 的 `sim_dt` 不能整除
+`ref_dt`，选择不粗于上游默认 `0.01 s` 的最大精确子步，并把策略写入 manifest；
+例如 30 FPS 使用 `sim_dt=1/120 s`。不得通过重采样 keypoints 或修改后端优化参数
+来掩盖时间网格冲突。
 
 ## 7. 可视化规则
 
@@ -205,22 +211,26 @@ replacing object with a point marker
 replacing robot hand with skeleton or fingertips
 ```
 
-## 9. 需要记住的集成修复
+## 9. 集成处理经验
 
-| 问题 | 原因 | 当前处理 |
+| 现象 | 常见原因 | 建议处理 |
 | --- | --- | --- |
 | Do-as-I-Do hand mesh 和 RGB 手不重合 | 用 object/MoGe intrinsics 投影 hand mesh | 使用 AoE hand camera intrinsics，并按 clip resolution 缩放 |
 | Do-as-I-Do frame 映射错误 | `source_frame_ids` 是原始全视频 id，而 clip 可能使用本地连续 index | 优先本地连续 index，只有 source-id 文件存在时才用 source id |
 | Do-as-I-Do object 变成点 | overlay 额外用了硬编码 scale | 默认使用 layout/optimized scale |
 | Do-as-I-Do object 资产混用 | physical retarget assets 被当成 RGB reconstruction assets | 优先用 `clip_dir/obj_tracking_out` 和 `video_segmentation/masks` |
+| projection 报 `Meshes does not have textures` | 重建 OBJ 只有几何，没有 MTL/纹理 | 使用 projector 的 `--object-color` 只补固定诊断顶点色；不重写几何或物理资产 |
 | Do-as-I-Do 尺度到米级 | scale optimization 因缺 hand mask/mesh 落入 shim | 渲染 hand masks，传入 hand meshes，并默认拒绝 shim |
 | EgoInfinity 选错同 prompt 瓶子 | 场景中有多个候选 | object filter 支持 `all`、`best` 和 target point |
 | EgoInfinity mesh 远大于 mask | SAM3D monocular canonical/pose scale 错 | `scale_sanity.py` 检查 mask+depth 物理 bbox |
 | EgoInfinity overlay 缺 `T_seq` | 新 pkl 把 pose 放在 `frame_data[*].sam3_obj_data` | renderer 从 frame data 组装 4x4 transform |
 | SAM3D worker OOM 但任务看似空闲 | 中断 run 留下 orphan worker | 只清理确认过的旧 socket worker |
-| SPIDER 没有机器人输出 | 早期 runner 只是 import check | wrapper 改为 generate_xml -> ik_fast -> run_mjwp |
+| SPIDER 没有机器人输出 | 早期 runner 只是 import check | pristine wrapper 依次调用原版 generate_xml -> ik_fast -> run_mjwp，并以原生返回码判定结果 |
+| SPIDER `trace_dt must be divisible by sim_dt` | 30 FPS 的 `ref_dt=1/30` 不能被上游默认 `0.01` 精确整除 | 保持 keypoints/ref_dt 不变，确定性选择最大精确子步；30 FPS 使用 `sim_dt=1/120` |
+| SPIDER `generate_xml` 找不到 object `visual.obj` | staged task info 的 object asset 路径没有绑定到实验私有 processed dataset | 复制经过哈希校验的 object assets 并改写实验副本 task info；不修改源 DAI 输出 |
+| DAI/SPIDER robot 行和 RGB 相机比例/视角不一致 | 官方 MJWP 视频拼接 ref/sim，且使用默认 offscreen 分辨率 | 用 `render_mujoco_trajectory.py --camera front --width 1280 --height 720` 从 `scene.xml + trajectory_mjwp.npz` 重渲染 |
 
-## 10. 验收清单
+## 10. 运行产物检查
 
 - `experiments/<run>/run_env.txt` 记录输入视频、时间段、GPU 和 task 名。
 - `logs/` 中有 EgoInfinity、Do-as-I-Do、SPIDER 的命令和日志。

@@ -1,0 +1,51 @@
+{
+  "batch_id": "20260712_inputqc02_2scene",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "runtime_commit": "fdf0d4f1b19857b6535782664387d59e2e61a055",
+  "run_suffix": "inputqc02_fdf0d4f",
+  "policy": {
+    "recommended_route": "egoinfinity_object_reconstruction_and_6dof_to_dai_or_spider",
+    "required_matrix_cells": 12,
+    "pre_simulation_gate": "retarget_input_qc",
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "bottom_panel": "plain_aligned_mujoco_only"
+  },
+  "machine_constraints": {
+    "forbidden_hosts": ["240"],
+    "host_243_forbidden_simulation_gpus": [1, 3]
+  },
+  "active_runs": [
+    {
+      "scene": "gold_box",
+      "source_run": "gold_box_full_source_20260712_243_camerafix01_c7a4ee0_ann3",
+      "matrix_run": "gold_box_matrix12_20260712_243_camerafix01_c7a4ee0_ann3",
+      "runtime_commit": "c7a4ee08d6990a8c7adf27e7446da1c6518ff889",
+      "host": "243",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6},
+      "status": "fresh_rerun_after_camera_frame_fix"
+    }
+  ],
+  "preflight_rejections": [
+    {
+      "scene": "small_white_bottle",
+      "source_run": "small_white_bottle_full_source_20260712_236_inputqc02_fdf0d4f_ann21",
+      "reason": "sam3_prompt_gate_target_mismatch_and_temporal_area_jump",
+      "selected_mask_annotation_bbox_iou": 0.0,
+      "worst_consecutive_mask_area_ratio": 2.812,
+      "max_allowed_consecutive_mask_area_ratio": 2.0
+    },
+    {
+      "scene": "gold_box",
+      "source_run": "gold_box_full_source_20260712_243_inputqc02_fdf0d4f_ann3",
+      "reason": "ego_object_incorrectly_aligned_to_dai_native_layout",
+      "aoe_required_offset_m_with_source_alignment": 0.808739311498253,
+      "aoe_no_source_alignment_probe_status": "ok",
+      "aoe_no_source_alignment_scale_p90_p10_ratio": 1.3572004963175779,
+      "aoe_no_source_alignment_mean_hand_object_gap_m": 0.19674898170397276,
+      "estimated_adapter_status": "ok",
+      "fix_commit": "9d9ff5d",
+      "next_action": "fresh_rerun_with_new_unique_suffix"
+    }
+  ]
+}

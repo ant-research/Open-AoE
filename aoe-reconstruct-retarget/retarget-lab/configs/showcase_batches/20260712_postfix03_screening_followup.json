@@ -1,0 +1,50 @@
+{
+  "batch_id": "20260712_postfix03_screening_followup",
+  "status": "screening_complete_no_full_run_promotions",
+  "runtime_commit": "8bb600d4a697b6acccc8a89a84bf9915357a3b47",
+  "screening_fix_commit": "d931dfb",
+  "policy": {
+    "recommended_route": "egoinfinity_object_reconstruction_and_6dof_to_dai_or_spider",
+    "source_runs": "fresh",
+    "robot_rgb_overlay_allowed": false,
+    "articulated_actions": "stress_only_unless_manual_review_proves_one_rigid_component"
+  },
+  "screening": {
+    "host": "236",
+    "command": "python scripts/diagnostics/screen_aoe_retarget_candidates.py --dataset-root $AOE_DATA_ROOT --existing-experiments-root experiments --exclude-existing --require-hand-object-near --top-k 100 --output-json experiments/screening/followup.json --output-csv experiments/screening/followup.csv",
+    "accepted_annotations": 40,
+    "rendered_unique_object_segment_candidates": 21,
+    "local_review_evidence": "aoe_retarget_demo_videos/_screening/20260712_postfix03screen01",
+    "manual_review_summary": "Most remaining candidates were too small, transparent, heavily occluded, bbox-mismatched, lacked sustained interaction, or were articulated. Only two candidates advanced to SAM3-only preflight."
+  },
+  "preflights": [
+    {
+      "scene": "large_cardboard_box",
+      "source_run": "large_cardboard_box_full_source_20260712_236_postfix03preflight01_8bb600d_ann22",
+      "annotation_id": 22,
+      "git_commit": "8bb600d4a697b6acccc8a89a84bf9915357a3b47",
+      "git_dirty": false,
+      "gpu_mapping": {"main": 0, "sam3": 0, "sam3d_unused": 1},
+      "sam3_preflight_status": "ok",
+      "sam3_valid_ratio": 1.0,
+      "selected_bbox_iou": 0.5323118581382293,
+      "max_centroid_jump_px": 43.51149368286133,
+      "worst_consecutive_mask_area_ratio": 1.2118067422712444,
+      "decision": "reject_articulated_action_before_sam3d",
+      "reason": "Early/reference/middle/late overlays consistently mask the union of a lid and base while the lid moves relative to the base; this violates the single-rigid-object 6DoF assumption."
+    },
+    {
+      "scene": "white_product_box",
+      "source_run": "white_product_box_full_source_20260712_236_postfix03preflight01_8bb600d_ann27",
+      "annotation_id": 27,
+      "git_commit": "8bb600d4a697b6acccc8a89a84bf9915357a3b47",
+      "git_dirty": false,
+      "gpu_mapping": {"main": 4, "sam3": 4, "sam3d_unused": 5},
+      "sam3_preflight_status": "failed",
+      "sam3_valid_ratio": 0.439,
+      "minimum_valid_ratio": 0.7,
+      "decision": "reject_segmentation_temporal_coverage"
+    }
+  ],
+  "full_run_promotions": []
+}

@@ -1,0 +1,120 @@
+{
+  "batch_id": "20260712_postfix_5scene",
+  "status": "aborted_after_numeric_diagnostics",
+  "effective_launch_count": 6,
+  "minimum_behavior_commit": "09fdba55a7723ed7b54c2880dd33d7151b3b0b2d",
+  "runtime_commit": "34dd919a8680ae3af1a796a06b063f44aae26de0",
+  "launch": {
+    "host": "236",
+    "started_at": "2026-07-12T05:38:29+08:00",
+    "driver_pid": 1282198,
+    "batch_status": "experiments/_batch_postfix02_34dd919/status.tsv",
+    "driver_log": "experiments/_batch_postfix02_34dd919_driver.log",
+    "stopped_at": "2026-07-12T07:02:28+08:00",
+    "stop_reason": "old runtime exposed confirmed-hand mask conflict and Ego contact-alignment gate mismatch"
+  },
+  "diagnostic_fixes": {
+    "confirmed_hand_not_flipped_by_derived_mask": "4de8c1e",
+    "ego_contact_alignment_matches_downstream_gate": "586e136",
+    "replacement_runtime_commit": "8bb600d4a697b6acccc8a89a84bf9915357a3b47",
+    "replacement_batch": "20260712_postfix03_6scene"
+  },
+  "required_fixes": {
+    "explicit_single_hand_forwarding": "f8b1009",
+    "full_timeline_invalid_dai_baseline": "1726aaf"
+  },
+  "launch_condition": "satisfied: old da34bad runs exited; shared runtime committed and clean at 34dd919",
+  "policy": {
+    "source_runs": "fresh",
+    "run_spider": "all",
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "acceptance": "12_of_12_with_plain_aligned_robot_videos_and_explicit_numeric_status"
+  },
+  "host": "236",
+  "lanes": [
+    {
+      "name": "lane_a",
+      "gpu_mapping": {"main": 2, "dai": 2, "sam3": 2, "sam3d": 3, "spider": 2},
+      "runs": [
+        {
+          "scene": "gold_jar",
+          "segment": "poc_raw_video_20260201_193100_part003",
+          "annotation_id": 20,
+          "object_name": "gold jar",
+          "task": "gold_jar_left",
+          "hand_type": "left",
+          "duration_sec": 3.25,
+          "source_run": "gold_jar_full_source_20260712_236_postfix02_34dd919_ann20",
+          "matrix_run": "gold_jar_matrix12_20260712_236_postfix02_34dd919_ann20"
+        },
+        {
+          "scene": "black_case",
+          "segment": "poc_raw_video_20260202_215703_part000",
+          "annotation_id": 12,
+          "object_name": "black case",
+          "task": "black_case_left",
+          "hand_type": "left",
+          "duration_sec": 2.25,
+          "source_run": "black_case_full_source_20260712_236_postfix02_34dd919_ann12",
+          "matrix_run": "black_case_matrix12_20260712_236_postfix02_34dd919_ann12"
+        },
+        {
+          "scene": "phone",
+          "segment": "poc_raw_video_20260214_232847_part002",
+          "annotation_id": 11,
+          "object_name": "phone",
+          "task": "phone_left",
+          "hand_type": "left",
+          "duration_sec": 5.25,
+          "source_run": "phone_full_source_20260712_236_postfix02_34dd919_ann11",
+          "matrix_run": "phone_matrix12_20260712_236_postfix02_34dd919_ann11",
+          "known_risk": "prior object_scale_ratio_temporally_unstable"
+        }
+      ]
+    },
+    {
+      "name": "lane_b",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6},
+      "runs": [
+        {
+          "scene": "blue_inhaler",
+          "status": "fresh_postfix_preflight_retry",
+          "known_risk": "AoE left-hand geometry was offset 0.333m from the visually overlapping Ego object; estimated adapter alone passed",
+          "segment": "poc_raw_video_20260201_193100_part002",
+          "annotation_id": 25,
+          "object_name": "blue inhaler",
+          "task": "blue_inhaler_left",
+          "hand_type": "left",
+          "duration_sec": 4.25,
+          "source_run": "blue_inhaler_full_source_20260712_236_postfix02_34dd919_ann25",
+          "matrix_run": "blue_inhaler_matrix12_20260712_236_postfix02_34dd919_ann25"
+        },
+        {
+          "scene": "black_spray_bottle",
+          "segment": "poc_raw_video_20260226_215034_part000",
+          "annotation_id": 9,
+          "object_name": "black spray bottle",
+          "task": "black_spray_bottle_right",
+          "hand_type": "right",
+          "duration_sec": 6.0,
+          "source_run": "black_spray_bottle_full_source_20260712_236_postfix02_34dd919_ann9",
+          "matrix_run": "black_spray_bottle_matrix12_20260712_236_postfix02_34dd919_ann9",
+          "known_risk": "prior AoE left overlap was 1 frame and estimated right overlap was 0 frames"
+        },
+        {
+          "scene": "gold_box",
+          "segment": "poc_raw_video_20260201_193100_part002",
+          "annotation_id": 3,
+          "object_name": "gold box",
+          "task": "gold_box_left",
+          "hand_type": "left",
+          "duration_sec": 3.25,
+          "source_run": "gold_box_full_source_20260712_236_postfix02_34dd919_ann3",
+          "matrix_run": "gold_box_matrix12_20260712_236_postfix02_34dd919_ann3",
+          "purpose": "validate full-timeline invalid DAI baseline after prior 11-of-12 run"
+        }
+      ]
+    }
+  ]
+}

@@ -32,6 +32,7 @@ dai_ref_frame="${V4_DAI_REF_FRAME:-}"
 dai_optimize_scale="${V4_DAI_OPTIMIZE_SCALE:-1}"
 
 main_cuda="${MAIN_CUDA:-0}"
+dai_cuda_visible_devices="${DAI_CUDA_VISIBLE_DEVICES:-$main_cuda}"
 sam3_cuda="${SAM3_WORKER_CUDA:-1}"
 sam3d_cuda="${SAM3D_WORKER_CUDA:-2}"
 
@@ -45,7 +46,6 @@ spider_data_id="${SPIDER_DATA_ID:-0}"
 spider_max_sim_steps="${SPIDER_MAX_SIM_STEPS:--1}"
 spider_num_samples="${SPIDER_NUM_SAMPLES:-1024}"
 spider_max_num_iterations="${SPIDER_MAX_NUM_ITERATIONS:-16}"
-allow_spider_fallback=1
 skip_existing_spider=1
 keep_going=1
 
@@ -92,6 +92,8 @@ Common options:
   --dai-ref-frame N         reference frame for scale optimization
   --no-dai-scale-optimize   skip official hand-anchored scale optimization
   --main-cuda ID            GPU for main processes
+  --dai-cuda-visible-devices IDS
+                            GPU visibility for Do-as-I-Do retarget/Mujoco
   --sam3-cuda ID            GPU for SAM3/SAM3.1 worker
   --sam3d-cuda ID           GPU for SAM3D worker
   --run-spider MODE         none, do_as_i_do, or all
@@ -104,7 +106,8 @@ Common options:
   --mode MODE               symlink, hardlink, or copy
   --duration SEC            triptych duration; 0 keeps source duration
   --no-compose              prepare assets without composing mp4 demos
-  --no-spider-fallback      fail/miss EgoInfinity+SPIDER cells instead of fallback
+  --allow-spider-fallback   rejected: production full runs require exact-route SPIDER output
+  --no-spider-fallback      fail/miss EgoInfinity+SPIDER cells instead of fallback (default)
   --force-spider            rerun existing SPIDER cells
   --stop-on-error           stop on a failed SPIDER cell
   -h, --help
@@ -118,6 +121,18 @@ die() {
 
 need_value() {
   [[ $# -ge 2 && -n "${2:-}" ]] || die "$1 requires a value"
+}
+
+resolve_repo_path() {
+  local path="$1"
+  if [[ -z "$path" ]]; then
+    return 0
+  fi
+  if [[ "$path" == /* ]]; then
+    readlink -f "$path"
+  else
+    readlink -f "$repo_root/$path"
+  fi
 }
 
 while [[ $# -gt 0 ]]; do
@@ -166,6 +181,8 @@ while [[ $# -gt 0 ]]; do
       dai_optimize_scale=0; shift ;;
     --main-cuda)
       need_value "$@"; main_cuda="$2"; shift 2 ;;
+    --dai-cuda-visible-devices)
+      need_value "$@"; dai_cuda_visible_devices="$2"; shift 2 ;;
     --sam3-cuda)
       need_value "$@"; sam3_cuda="$2"; shift 2 ;;
     --sam3d-cuda)
@@ -198,8 +215,10 @@ while [[ $# -gt 0 ]]; do
       need_value "$@"; duration="$2"; shift 2 ;;
     --no-compose)
       compose=0; shift ;;
+    --allow-spider-fallback)
+      die "--allow-spider-fallback is diagnostic-only and forbidden in production full runs" ;;
     --no-spider-fallback)
-      allow_spider_fallback=0; shift ;;
+      shift ;;
     --force-spider)
       skip_existing_spider=0; shift ;;
     --stop-on-error)
@@ -234,7 +253,10 @@ if [[ -z "$source_run" ]]; then
       "$repo_root/scripts/prepare_do_as_i_do_scene_adapter.py"
       --source-dir "$dai_source_dir"
       --output-dir "$dai_prepared_raw_dir"
+      --task "$task"
+      --hand-source aoe
       --python-bin "$retargeting_python"
+      --hoi-contact-alignment diagnostic
       --force
     )
     if [[ -n "$dai_object_id" ]]; then
@@ -246,19 +268,28 @@ if [[ -z "$source_run" ]]; then
     if [[ -n "$dai_fallback_gravity_json" ]]; then
       adapter_cmd+=(--fallback-gravity-json "$dai_fallback_gravity_json")
     fi
-    if [[ -n "$dai_anchor_hand" ]]; then
-      adapter_cmd+=(--anchor-hand "$dai_anchor_hand")
-    else
-      adapter_cmd+=(--anchor-hand "$hand_type")
+    resolved_dai_anchor_hand="$dai_anchor_hand"
+    if [[ -z "$resolved_dai_anchor_hand" && "$hand_type" =~ ^(left|right)$ ]]; then
+      resolved_dai_anchor_hand="$hand_type"
     fi
+    if [[ -z "$resolved_dai_anchor_hand" && -s "$dai_source_dir/scale_anchor_hand_selection.json" ]]; then
+      resolved_dai_anchor_hand="$("$retargeting_python" -c 'import json, sys; print(json.load(open(sys.argv[1])).get("selected_anchor_hand", ""))' "$dai_source_dir/scale_anchor_hand_selection.json")"
+    fi
+    if [[ -z "$resolved_dai_anchor_hand" && -s "$dai_source_dir/config.json" ]]; then
+      resolved_dai_anchor_hand="$("$retargeting_python" -c 'import json, sys; print(json.load(open(sys.argv[1])).get("scale_anchor_hand", ""))' "$dai_source_dir/config.json")"
+    fi
+    case "$resolved_dai_anchor_hand" in
+      left|right) ;;
+      *) die "DAI scale optimization requires a resolved left/right anchor; pass --dai-anchor-hand or provide scale_anchor_hand_selection.json" ;;
+    esac
+    adapter_cmd+=(--anchor-hand "$resolved_dai_anchor_hand")
     if [[ -n "$dai_ref_frame" ]]; then
       adapter_cmd+=(--ref-frame "$dai_ref_frame")
     fi
-    if [[ "$dai_optimize_scale" == "0" ]]; then
-      adapter_cmd+=(--no-optimize-scale)
-    else
-      adapter_cmd+=(--scale-viz-dir "$repo_root/experiments/$base_run_name/intermediates/adapters/do_as_i_do/scale_optimization_viz")
-    fi
+    # Production route adapters preserve the source HOI exactly. The adapter
+    # CLI still supports scale optimization for diagnostics, but matrix inputs
+    # must opt out so hoi_refinement.applied remains false.
+    adapter_cmd+=(--no-optimize-scale)
     echo "[full12] adapting Do-as-I-Do scene: $dai_source_dir"
     (cd "$repo_root" && "${adapter_cmd[@]}")
     dai_raw_dir="$dai_prepared_raw_dir"
@@ -271,6 +302,9 @@ if [[ -z "$source_run" ]]; then
   [[ -n "$ego_objects" ]] || die "set --ego-objects or V4_EGO_OBJECTS"
   [[ -n "$dai_raw_dir" ]] || die "set --dai-raw-dir or V4_DAI_RAW_DIR"
   [[ -n "$dai_clip_dir" ]] || die "set --dai-clip-dir or V4_DAI_CLIP_DIR"
+  ego_video="$(resolve_repo_path "$ego_video")"
+  dai_raw_dir="$(resolve_repo_path "$dai_raw_dir")"
+  dai_clip_dir="$(resolve_repo_path "$dai_clip_dir")"
 
   export V4_RUN_NAME="$base_run_name"
   export V4_TASK="$task"
@@ -284,6 +318,7 @@ if [[ -z "$source_run" ]]; then
   export V4_DAI_RAW_DIR="$dai_raw_dir"
   export V4_DAI_CLIP_DIR="$dai_clip_dir"
   export MAIN_CUDA="$main_cuda"
+  export DAI_CUDA_VISIBLE_DEVICES="$dai_cuda_visible_devices"
   export SAM3_WORKER_CUDA="$sam3_cuda"
   export SAM3D_WORKER_CUDA="$sam3d_cuda"
 
@@ -314,6 +349,11 @@ reuse_cmd=(
   --spider-max-sim-steps "$spider_max_sim_steps"
   --spider-num-samples "$spider_num_samples"
   --spider-max-num-iterations "$spider_max_num_iterations"
+  --no-allow-spider-fallback
+  --no-allow-spider-mjwp-fallback-video
+  --no-allow-dai-hand-fallback
+  --no-allow-cross-trajectory-dai-robot-fallback
+  --no-include-numerically-invalid-aligned-robot
 )
 
 if [[ "$compose" -eq 1 ]]; then
@@ -327,11 +367,6 @@ if [[ -n "$spider_python" ]]; then
 fi
 if [[ -n "$spider_cuda_visible_devices" ]]; then
   reuse_cmd+=(--spider-cuda-visible-devices "$spider_cuda_visible_devices")
-fi
-if [[ "$allow_spider_fallback" -eq 1 ]]; then
-  reuse_cmd+=(--allow-spider-fallback)
-else
-  reuse_cmd+=(--no-allow-spider-fallback)
 fi
 if [[ "$skip_existing_spider" -eq 1 ]]; then
   reuse_cmd+=(--skip-existing-spider)
@@ -347,10 +382,100 @@ fi
 echo "[full12] expanding 12 demos: experiments/$matrix_run_name"
 (cd "$repo_root" && "${reuse_cmd[@]}")
 
+matrix_root="$repo_root/experiments/$matrix_run_name"
+matrix_audit_json="$matrix_root/audit_retarget_run.json"
+matrix_audit_log="$matrix_root/logs/audit_retarget_run.log"
+mkdir -p "$matrix_root/logs"
+echo "[full12] strict matrix admission audit: experiments/$matrix_run_name"
+matrix_audit_rc=0
+"$python_bin" - \
+  "$repo_root" "$matrix_run_name" "$source_run" "$matrix_audit_json" "$compose" <<'PY' \
+  2>&1 | tee "$matrix_audit_log" || matrix_audit_rc=$?
+import json
+import sys
+from pathlib import Path
+
+repo_root = Path(sys.argv[1]).resolve()
+matrix_run = sys.argv[2]
+source_run = sys.argv[3]
+output_json = Path(sys.argv[4]).resolve()
+compose_enabled = bool(int(sys.argv[5]))
+sys.path.insert(0, str(repo_root / "scripts"))
+
+import audit_retarget_run as audit  # noqa: E402
+
+matrix_root = repo_root / "experiments" / matrix_run
+manifest_path = matrix_root / "reuse_12_demo_manifest.json"
+manifest = audit.load_json(manifest_path)
+errors = []
+warnings = []
+cell_report = {}
+spider_report = {}
+if manifest is None:
+    errors.append(f"missing matrix manifest: {manifest_path}")
+else:
+    cell_report = audit.audit_cells(
+        matrix_root,
+        manifest,
+        allow_legacy_unaligned=False,
+        require_triptych=compose_enabled,
+    )
+    spider_report = audit.audit_spider(matrix_root, manifest, allow_legacy_unaligned=False)
+    errors.extend(cell_report.get("errors") or [])
+    errors.extend(spider_report.get("errors") or [])
+    warnings.extend(cell_report.get("warnings") or [])
+    warnings.extend(spider_report.get("warnings") or [])
+
+admission = audit.summarize_route_admission(cell_report, spider_report)
+errors.extend(admission.get("errors") or [])
+candidate_routes = list(admission.get("admitted_routes") or [])
+if not candidate_routes:
+    errors.append("strict matrix audit admitted no exact numerical-valid retarget route")
+candidate_routes_blocked_by_audit_errors = candidate_routes if errors else []
+admitted_routes = [] if errors else candidate_routes
+admitted_route_count = len(admitted_routes)
+
+report = {
+    "scope": "matrix_only",
+    "matrix_run": matrix_run,
+    "matrix_root": str(matrix_root),
+    "source_run": source_run,
+    "manifest": str(manifest_path),
+    "source_audit_status": "deferred_to_fresh_full_run_audit",
+    "cells": cell_report,
+    "spider": spider_report,
+    "admitted_routes": admitted_routes,
+    "candidate_routes_blocked_by_audit_errors": candidate_routes_blocked_by_audit_errors,
+    "unavailable_routes": admission.get("unavailable_routes") or [],
+    "unavailable_route_details": admission.get("unavailable_route_details") or [],
+    "invalid_routes": admission.get("invalid_routes") or [],
+    "invalid_route_details": admission.get("invalid_route_details") or [],
+    "admitted_route_count": admitted_route_count,
+    "numerically_admitted_routes": admitted_routes,
+    "numerically_admitted_route_count": admitted_route_count,
+    "composition_enabled": compose_enabled,
+    "demo_count": admitted_route_count if compose_enabled else 0,
+    "scene_admitted": admitted_route_count > 0 if compose_enabled else False,
+    "status": "failed" if errors else "ok",
+    "errors": errors,
+    "warnings": warnings,
+}
+output_json.parent.mkdir(parents=True, exist_ok=True)
+text = json.dumps(report, indent=2, ensure_ascii=False)
+output_json.write_text(text + "\n", encoding="utf-8")
+print(text)
+raise SystemExit(1 if errors else 0)
+PY
+if (( matrix_audit_rc != 0 )); then
+  echo "[full12] strict matrix admission audit failed: $matrix_audit_json" >&2
+  exit "$matrix_audit_rc"
+fi
+
 cat <<EOF
 [full12] done
 source_run: experiments/$source_run
 matrix_run: experiments/$matrix_run_name
 videos:     experiments/$matrix_run_name/videos/
 manifest:   experiments/$matrix_run_name/reuse_12_demo_manifest.json
+audit:      experiments/$matrix_run_name/audit_retarget_run.json
 EOF

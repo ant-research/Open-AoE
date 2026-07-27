@@ -1,0 +1,144 @@
+{
+  "batch_id": "20260711_anchorfix_10scene_0f05307",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "github_commit": "54d599d8cae991eea624a74ec11b0242eac5cd0c",
+  "shared_runtime_commit": "0f05307c0a6f9a6228a0217e2b6effc6fd1a1873",
+  "target_showcase_count": 10,
+  "verified_showcase_count_at_launch": 0,
+  "acceptance": {
+    "required_matrix_cells": 12,
+    "required_dai_plain_videos": 4,
+    "required_spider_plain_videos": 4,
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "inpainting_allowed": false,
+    "bottom_panel": "plain_aligned_mujoco_only",
+    "pure_dai_object_policy": "dai_native_or_dai_native_contact_aligned_only",
+    "recommended_route": "egoinfinity_object_reconstruction_and_6dof_to_dai_or_spider",
+    "required_reviews": [
+      "audit_retarget_run.json",
+      "plain_robot_visual_review.json"
+    ]
+  },
+  "screening": {
+    "hard_failures": [
+      "sam3_identity_switch",
+      "missing_cell_or_plain_video",
+      "unaligned_warmup_video",
+      "nonfinite_trajectory",
+      "spider_fallback",
+      "object_asset_provenance_violation"
+    ],
+    "manual_review_triggers": [
+      "sam3_mask_to_bbox_area_ratio_gt_2",
+      "sam3_annotation_bbox_iou_lt_0.1",
+      "plain_robot_contact_or_object_orientation_is_visually_implausible"
+    ],
+    "numeric_diagnostics": [
+      "object_pose_error",
+      "hand_object_relative_transform_error",
+      "contact_retention",
+      "lost_frame_fraction",
+      "warmup_and_source_time_alignment"
+    ]
+  },
+  "machine_constraints": {
+    "forbidden_hosts": ["240"],
+    "243_forbidden_simulation_gpus": [1, 3]
+  },
+  "queues": [
+    {
+      "host": "236",
+      "gpu_mapping": {"main": 2, "dai": 2, "sam3": 2, "sam3d": 2, "spider": 2},
+      "runs": [
+        {
+          "scene": "gold_jar",
+          "segment": "poc_raw_video_20260201_193100_part003",
+          "annotation_id": 20,
+          "source_run": "gold_jar_full_source_20260711_236_anchorfix50_0f05307_ann20",
+          "matrix_run": "gold_jar_matrix12_20260711_236_anchorfix50_0f05307_ann20",
+          "status": "in_progress"
+        },
+        {
+          "scene": "phone",
+          "segment": "poc_raw_video_20260214_232847_part002",
+          "annotation_id": 11,
+          "source_run": "phone_full_source_20260711_236_anchorfix51_0f05307_ann11",
+          "matrix_run": "phone_matrix12_20260711_236_anchorfix51_0f05307_ann11",
+          "status": "queued"
+        },
+        {
+          "scene": "small_white_bottle",
+          "segment": "poc_raw_video_20260201_193100_part002",
+          "annotation_id": 21,
+          "source_run": "small_white_bottle_full_source_20260711_236_anchorfix55_0f05307_ann21",
+          "matrix_run": "small_white_bottle_matrix12_20260711_236_anchorfix55_0f05307_ann21",
+          "status": "queued_after_primary_queue"
+        },
+        {
+          "scene": "mug",
+          "segment": "poc_raw_video_20260329_154934_part003",
+          "annotation_id": 3,
+          "source_run": "mug_full_source_20260711_236_anchorfix56_0f05307_ann3",
+          "matrix_run": "mug_matrix12_20260711_236_anchorfix56_0f05307_ann3",
+          "status": "queued_after_primary_queue"
+        },
+        {
+          "scene": "brush",
+          "segment": "poc_raw_video_20260202_214320_part003",
+          "annotation_id": 10,
+          "source_run": "brush_full_source_20260711_236_anchorfix57_0f05307_ann10",
+          "matrix_run": "brush_matrix12_20260711_236_anchorfix57_0f05307_ann10",
+          "status": "queued_after_primary_queue"
+        }
+      ]
+    },
+    {
+      "host": "243",
+      "gpu_mapping": {"main": 0, "dai": 0, "sam3": 5, "sam3d": 2, "spider": 0},
+      "runs": [
+        {
+          "scene": "black_case",
+          "segment": "poc_raw_video_20260202_215703_part000",
+          "annotation_id": 12,
+          "source_run": "black_case_full_source_20260711_243_anchorfix52_0f05307_ann12",
+          "matrix_run": "black_case_matrix12_20260711_243_anchorfix52_0f05307_ann12",
+          "status": "in_progress_manual_sam3_review_passed",
+          "manual_review": "Mask follows the case in frames 0, 34, and 57; low annotation IoU is caused by the loose annotation box."
+        },
+        {
+          "scene": "blue_inhaler",
+          "segment": "poc_raw_video_20260201_193100_part002",
+          "annotation_id": 25,
+          "source_run": "blue_inhaler_full_source_20260711_243_anchorfix53_0f05307_ann25",
+          "matrix_run": "blue_inhaler_matrix12_20260711_243_anchorfix53_0f05307_ann25",
+          "status": "queued"
+        },
+        {
+          "scene": "black_spray_bottle",
+          "segment": "poc_raw_video_20260226_215034_part000",
+          "annotation_id": 9,
+          "source_run": "black_spray_bottle_full_source_20260711_243_anchorfix54_0f05307_ann9",
+          "matrix_run": "black_spray_bottle_matrix12_20260711_243_anchorfix54_0f05307_ann9",
+          "status": "queued"
+        },
+        {
+          "scene": "gold_box",
+          "segment": "poc_raw_video_20260201_193100_part002",
+          "annotation_id": 3,
+          "source_run": "gold_box_full_source_20260711_243_anchorfix58_0f05307_ann3",
+          "matrix_run": "gold_box_matrix12_20260711_243_anchorfix58_0f05307_ann3",
+          "status": "queued_after_primary_queue"
+        },
+        {
+          "scene": "metal_bowl",
+          "segment": "poc_raw_video_20260207_204222",
+          "annotation_id": 2,
+          "source_run": "metal_bowl_full_source_20260711_243_anchorfix59_0f05307_ann2",
+          "matrix_run": "metal_bowl_matrix12_20260711_243_anchorfix59_0f05307_ann2",
+          "status": "queued_after_primary_queue_requires_fresh_sam3_gate"
+        }
+      ]
+    }
+  ]
+}

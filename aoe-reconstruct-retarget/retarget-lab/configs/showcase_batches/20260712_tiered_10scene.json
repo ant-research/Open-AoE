@@ -1,0 +1,247 @@
+{
+  "batch_id": "20260712_tiered_10scene",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "objective": "fresh multi-scene EgoInfinity-to-DAI/SPIDER retarget showcase screening",
+  "policy": {
+    "recommended_route": "egoinfinity_object_reconstruction_and_6dof_to_dai_or_spider",
+    "pure_dai_role": "honest_baseline_only",
+    "required_matrix_cells": 12,
+    "required_dai_plain_videos": 4,
+    "required_spider_plain_videos": 4,
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "bottom_panel": "plain_aligned_mujoco_only"
+  },
+  "machine_constraints": {
+    "forbidden_hosts": ["240"],
+    "host_243_forbidden_simulation_gpus": [1, 3]
+  },
+  "screening": {
+    "profile_commit": "e089fca",
+    "command": "python scripts/diagnostics/screen_aoe_retarget_candidates.py --dataset-root $AOE_DATA_ROOT --existing-experiments-root experiments --exclude-existing --require-hand-object-near --top-k 100 --output-json experiments/screening/tiered.json --output-csv experiments/screening/tiered.csv",
+    "result_counts": {"primary": 16, "conditional": 16, "stress": 12},
+    "manual_review_evidence": "aoe_retarget_demo_videos/_qa/aoe_tier_primary_20260712",
+    "manual_review_selected": ["beige_case:ann11", "lamp:ann3"],
+    "manual_review_rejected": [
+      "pen:target_too_small",
+      "phone:ann13_no_sustained_hold",
+      "plastic_container:transparent_or_ambiguous",
+      "small_white_bottle:target_not_clear",
+      "red_labeled_bottle:bbox_or_interaction_mismatch",
+      "blue_box:ann6_bbox_target_mismatch",
+      "spray_bottle:prompt_scene_mismatch",
+      "yellow_bleach_bottle:no_sustained_interaction"
+    ]
+  },
+  "runs": [
+    {
+      "scene": "frying_pan",
+      "suitability_tier": "stress",
+      "source_run": "frying_pan_full_source_20260712_236_bimanualfix02_7d753d4_ann2",
+      "matrix_run": "frying_pan_matrix12_20260712_236_bimanualfix02_7d753d4_ann2",
+      "runtime_commit": "7d753d4effdfb460b313f7cb6c262ac06a542c9f",
+      "host": "236",
+      "gpu_mapping": {"main": 4, "dai": 4, "sam3": 4, "sam3d": 5, "spider": 4},
+      "status": "rejected_strict_audit_11_of_12_one_recommended_spider_cell_passed",
+      "observed": {
+        "pure_dai_aoe_lost_frame_fraction": 0.47058823529411764,
+        "ego_dai_aoe_lost_frame_fraction": 0.7205882352941176,
+        "ego_dai_aoe_contact_retention_fraction": 0.9811320754716981,
+        "matrix_composed": 11,
+        "missing_cell": "traj_do_as_i_do__hand_aoe__retarget_do_as_i_do",
+        "recommended_spider_passed_cell": "traj_egoinfinity__hand_estimated__retarget_spider",
+        "recommended_spider_pos_median_m": 0.048915102767253214,
+        "recommended_spider_rot_median_rad": 0.6829498480106282,
+        "recommended_spider_lost_frame_fraction": 0.0,
+        "audit_path": "experiments/frying_pan_matrix12_20260712_236_bimanualfix02_7d753d4_ann2/retarget_audit.json"
+      }
+    },
+    {
+      "scene": "gold_box",
+      "suitability_tier": "primary",
+      "source_run": "gold_box_full_source_20260712_243_camerafix01_c7a4ee0_ann3",
+      "matrix_run": "gold_box_matrix12_20260712_243_camerafix01_c7a4ee0_ann3",
+      "runtime_commit": "c7a4ee08d6990a8c7adf27e7446da1c6518ff889",
+      "host": "243",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6},
+      "status": "rejected_strict_audit_11_of_12",
+      "audit": {
+        "path": "experiments/gold_box_matrix12_20260712_243_camerafix01_c7a4ee0_ann3/retarget_audit.json",
+        "status": "failed",
+        "cells": 12,
+        "composed": 11,
+        "missing_cells": {
+          "traj_egoinfinity__hand_estimated__retarget_do_as_i_do": ["robot"]
+        },
+        "missing_route_duration_coverage_ratio": 0.15309278350515138,
+        "spider_quality_statuses": ["invalid", "invalid", "invalid", "invalid"],
+        "spider_primary_failures": [
+          "native_aoe:lost_frame_fraction=0.155263",
+          "native_estimated:no_reference_hand_object_contact",
+          "ego_aoe:rotation_error_median_rad=0.892380",
+          "ego_estimated:rotation_error_median_rad=0.890709"
+        ]
+      }
+    },
+    {
+      "scene": "gold_jar",
+      "suitability_tier": "conditional",
+      "source_run": "gold_jar_full_source_20260712_236_lefthand02_da34bad_ann20",
+      "matrix_run": "gold_jar_matrix12_20260712_236_lefthand02_da34bad_ann20",
+      "runtime_commit": "da34bad9303924a57d9d5817c681636713f8dfb0",
+      "host": "236",
+      "gpu_mapping": {"main": 4, "dai": 4, "sam3": 4, "sam3d": 5, "spider": 4},
+      "status": "aborted_after_first_dai_cell_incomplete_coverage",
+      "run_pid": 1154407,
+      "known_runtime_risk": "run started before explicit single-hand forwarding fix f8b1009",
+      "observed_old_runtime": {
+        "cell": "traj_do_as_i_do__hand_aoe__retarget_do_as_i_do",
+        "complete_source_coverage": false,
+        "duration_coverage_ratio": 0.9262886597937947,
+        "quality_status": "invalid",
+        "lost_frame_fraction": 0.16326530612244897,
+        "stop_reason": "strict 12-cell completion impossible before full-timeline fix 1726aaf"
+      },
+      "task_correction": "bimanual_to_left_from_adapter_interaction_evidence",
+      "interaction_evidence": {
+        "visual_overlap_frames": {"left": 31, "right": 0},
+        "geometry_contact_fraction_aoe": {"left": 0.09375, "right": 0.03125},
+        "geometry_contact_fraction_estimated": {"left": 1.0, "right": 0.875}
+      },
+      "prior_attempt": {
+        "source_run": "gold_jar_full_source_20260712_236_revisit01_da34bad_ann20",
+        "matrix_run": "gold_jar_matrix12_20260712_236_revisit01_da34bad_ann20",
+        "status": "rejected_pre_simulation",
+        "reason": "weak_visual_bimanual_overlap:right:0"
+      }
+    },
+    {
+      "scene": "phone",
+      "suitability_tier": "primary",
+      "source_run": "phone_full_source_20260712_236_revisit01_da34bad_ann11",
+      "matrix_run": "phone_matrix12_20260712_236_revisit01_da34bad_ann11",
+      "runtime_commit": "da34bad9303924a57d9d5817c681636713f8dfb0",
+      "host": "236",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6},
+      "status": "rejected_pre_simulation",
+      "queue_pid": 1071152,
+      "preflight_errors": [
+        "object_scale_ratio_temporally_unstable",
+        "weak_visual_bimanual_overlap:right:0"
+      ],
+      "required_fix_commit": "f8b1009"
+    },
+    {
+      "scene": "black_case",
+      "suitability_tier": "conditional",
+      "source_run": "black_case_full_source_20260712_236_revisit01_da34bad_ann12",
+      "matrix_run": "black_case_matrix12_20260712_236_revisit01_da34bad_ann12",
+      "runtime_commit": "da34bad9303924a57d9d5817c681636713f8dfb0",
+      "host": "236",
+      "gpu_mapping": {"main": 2, "dai": 2, "sam3": 2, "sam3d": 3, "spider": 2},
+      "status": "rejected_pre_simulation_retry_as_left_after_f8b1009",
+      "queue_pid": 1071152,
+      "preflight_error": "weak_visual_bimanual_overlap:right:0",
+      "interaction_evidence": {
+        "visual_overlap_frames": {"left": 19, "right": 0}
+      },
+      "required_fix_commit": "f8b1009"
+    },
+    {
+      "scene": "blue_inhaler",
+      "suitability_tier": "primary",
+      "source_run": "blue_inhaler_full_source_20260712_236_revisit01_da34bad_ann25",
+      "matrix_run": "blue_inhaler_matrix12_20260712_236_revisit01_da34bad_ann25",
+      "runtime_commit": "da34bad9303924a57d9d5817c681636713f8dfb0",
+      "host": "236",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6},
+      "status": "rejected_pre_simulation_aoe_hand_coordinate_offset",
+      "queue_pid": 1071152,
+      "aoe_adapter": {
+        "status": "invalid",
+        "selected_hand": "left",
+        "visual_overlap_frames": 13,
+        "hoi_offset_norm_m": 0.3326059793959592,
+        "error": "hoi_coordinate_offset_exceeds_max"
+      },
+      "estimated_adapter": {
+        "status": "ok"
+      },
+      "strict_12_cell_eligible": false
+    },
+    {
+      "scene": "orange_tablet",
+      "suitability_tier": "conditional",
+      "source_run": "orange_tablet_full_source_20260712_236_screened01_da34bad_ann3",
+      "matrix_run": "orange_tablet_matrix12_20260712_236_screened01_da34bad_ann3",
+      "runtime_commit": "da34bad9303924a57d9d5817c681636713f8dfb0",
+      "host": "236",
+      "gpu_mapping": {"main": 2, "dai": 2, "sam3": 2, "sam3d": 3, "spider": 2},
+      "status": "rejected_sam3_mask_qc",
+      "queue_pid": 1071152,
+      "sam3_valid_ratio": 0.639,
+      "sam3_min_valid_ratio": 0.7
+    },
+    {
+      "scene": "small_cardboard_box",
+      "suitability_tier": "conditional",
+      "source_run": "small_cardboard_box_full_source_20260712_236_screened01_da34bad_ann11",
+      "matrix_run": "small_cardboard_box_matrix12_20260712_236_screened01_da34bad_ann11",
+      "runtime_commit": "da34bad9303924a57d9d5817c681636713f8dfb0",
+      "host": "236",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6},
+      "status": "rejected_sam3_prompt_bbox_coverage",
+      "queue_pid": 1071152,
+      "sam3_mask_to_annotation_bbox_ratio": 0.184,
+      "sam3_min_mask_to_annotation_bbox_ratio": 0.25
+    },
+    {
+      "scene": "beige_case",
+      "suitability_tier": "primary",
+      "source_run": "beige_case_full_source_20260712_236_primary01_da34bad_ann11",
+      "matrix_run": "beige_case_matrix12_20260712_236_primary01_da34bad_ann11",
+      "runtime_commit": "da34bad9303924a57d9d5817c681636713f8dfb0",
+      "host": "236",
+      "gpu_mapping": {"main": 2, "dai": 2, "sam3": 2, "sam3d": 3, "spider": 2},
+      "status": "rejected_sam3_no_prompt_object",
+      "queue_pid": 1071152,
+      "sam3_valid_ratio": 0.0,
+      "sam3_errors": ["no_objects_detected_on_prompt_frame", "constant_bbox_across_clip"]
+    },
+    {
+      "scene": "lamp",
+      "suitability_tier": "primary",
+      "source_run": "lamp_full_source_20260712_236_primary01_da34bad_ann3",
+      "matrix_run": "lamp_matrix12_20260712_236_primary01_da34bad_ann3",
+      "runtime_commit": "da34bad9303924a57d9d5817c681636713f8dfb0",
+      "host": "236",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6},
+      "status": "rejected_sam3_prompt_frame_missing_mask",
+      "queue_pid": 1071152,
+      "sam3_prompt_frame": 108,
+      "sam3_prompt_mask_pixels": 0
+    },
+    {
+      "scene": "black_spray_bottle",
+      "suitability_tier": "conditional_revisit",
+      "source_run": "black_spray_bottle_full_source_20260712_243_revisit03_da34bad_ann9",
+      "matrix_run": "black_spray_bottle_matrix12_20260712_243_revisit03_da34bad_ann9",
+      "runtime_commit": "da34bad9303924a57d9d5817c681636713f8dfb0",
+      "host": "243",
+      "gpu_mapping": {"main": 6, "dai": 6, "sam3": 6, "sam3d": 7, "spider": 6},
+      "status": "rejected_pre_simulation_retry_postfix02",
+      "run_pid": 1242839,
+      "prior_gate_result": "rejected_pre_simulation",
+      "preflight_errors": {
+        "aoe_selected_hand": "left",
+        "aoe_visual_overlap_frames": 1,
+        "aoe_error": "weak_visual_hand_object_overlap:left:1",
+        "estimated_selected_hand": "right",
+        "estimated_visual_overlap_frames": 0,
+        "estimated_error": "weak_visual_hand_object_overlap:right:0"
+      },
+      "postfix_retry_runtime_commit": "34dd919a8680ae3af1a796a06b063f44aae26de0",
+      "acceptance_rule": "must_pass_numeric_qc_and_12_of_12_completeness"
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "batch_id": "20260711_retarget_only_7947b2e",
+  "development_branch": "codex/retarget-lab-v0.1.1",
+  "shared_runtime_commit": "7947b2eef7cb0b454ce9a88eacfbf8673e89686e",
+  "latest_branch_commit": "dac62e562e65e1455b865401109441dd4052f885",
+  "required_next_runtime_commits": {
+    "structural_audit_severity": "d5e912de80aed0dae8c55c09d5a72945ba41e237",
+    "release_ego_workers_before_retarget": "55833baf6441d32d86e1a79cd809eb74fc2ded26",
+    "sam3_manual_review_warnings": "dac62e562e65e1455b865401109441dd4052f885"
+  },
+  "target_showcase_count": 10,
+  "verified_showcase_count": 0,
+  "verification_note": "A scene is not counted until all eight DAI/SPIDER plain aligned MuJoCo cells have been viewed and plain_robot_visual_review.json is recorded.",
+  "policy": {
+    "recommended_route": "egoinfinity_object_reconstruction_and_6dof_to_dai_or_spider",
+    "dai_native_role": "baseline_only_no_ego_asset_substitution",
+    "spider_fallback_allowed": false,
+    "robot_rgb_overlay_allowed": false,
+    "inpainting_allowed": false,
+    "bottom_panel": "plain_aligned_mujoco_only",
+    "required_matrix_cells": 12,
+    "required_dai_plain_videos": 4,
+    "required_spider_plain_videos": 4,
+    "numeric_threshold_failures": "diagnostic_warning_unless_nonfinite_or_structurally_invalid",
+    "hard_failures": [
+      "missing_cell_or_video",
+      "unaligned_warmup_video",
+      "nonfinite_trajectory",
+      "spider_fallback",
+      "object_asset_provenance_violation",
+      "sam3_identity_switch"
+    ]
+  },
+  "machine_constraints": {
+    "forbidden_hosts": ["240"],
+    "243_forbidden_simulation_gpus": [1, 3]
+  },
+  "active_or_queued_runs": [
+    {
+      "scene": "white_product_box",
+      "source_run": "white_product_box_full_source_20260711_243_showcase38_7947b2e_ann24",
+      "matrix_run": "white_product_box_matrix12_20260711_243_showcase38_7947b2e_ann24",
+      "status": "in_progress",
+      "host": "243",
+      "gpu_mapping": {"main": 0, "dai": 0, "sam3": 5, "sam3d": 2, "spider": 4},
+      "run_commit": "7947b2eef7cb0b454ce9a88eacfbf8673e89686e",
+      "runtime_intervention": false
+    },
+    {
+      "scene": "phone",
+      "source_run": "phone_full_source_20260711_236_rerun40_7947b2e_ann11",
+      "matrix_run": "phone_matrix12_20260711_236_rerun40_7947b2e_ann11",
+      "status": "in_progress_screening_only_legacy_worker_lifecycle",
+      "host": "236",
+      "gpu_mapping": {"main": 3, "dai": 3, "sam3": 3, "sam3d": 3, "spider": 3},
+      "run_commit": "7947b2eef7cb0b454ce9a88eacfbf8673e89686e",
+      "runtime_intervention": "release Ego workers after selected pipeline is materialized; final delivery requires a fresh fixed-commit rerun"
+    },
+    {
+      "scene": "black_case",
+      "source_run": "black_case_full_source_20260711_236_rerun41_7947b2e_ann12",
+      "matrix_run": "black_case_matrix12_20260711_236_rerun41_7947b2e_ann12",
+      "status": "queued_screening_only_legacy_worker_lifecycle",
+      "host": "236",
+      "gpu_mapping": {"main": 3, "dai": 3, "sam3": 3, "sam3d": 3, "spider": 3}
+    },
+    {
+      "scene": "blue_inhaler",
+      "source_run": "blue_inhaler_full_source_20260711_236_rerun42_7947b2e_ann25",
+      "matrix_run": "blue_inhaler_matrix12_20260711_236_rerun42_7947b2e_ann25",
+      "status": "queued_screening_only_legacy_worker_lifecycle",
+      "host": "236",
+      "gpu_mapping": {"main": 3, "dai": 3, "sam3": 3, "sam3d": 3, "spider": 3}
+    },
+    {
+      "scene": "black_spray_bottle",
+      "source_run": "black_spray_bottle_full_source_20260711_236_rerun43_7947b2e_ann9",
+      "matrix_run": "black_spray_bottle_matrix12_20260711_236_rerun43_7947b2e_ann9",
+      "status": "queued_screening_only_legacy_worker_lifecycle",
+      "host": "236",
+      "gpu_mapping": {"main": 3, "dai": 3, "sam3": 3, "sam3d": 3, "spider": 3}
+    }
+  ],
+  "resource_failures": [
+    {
+      "scene": "gold_jar",
+      "source_run": "gold_jar_full_source_20260711_236_rerun39_7947b2e_ann20",
+      "status": "aborted_resource_not_reusable",
+      "reason": "Warp CUDA graph OOM in first DAI cell while Ego workers remained resident"
+    },
+    {
+      "scene": "gold_jar",
+      "source_run": "gold_jar_full_source_20260711_236_rerun44_7947b2e_ann20_gpu2",
+      "status": "aborted_resource_not_reusable",
+      "reason": "same legacy worker-lifecycle OOM reproduced on an otherwise empty GPU2",
+      "required_fix_commit": "55833baf6441d32d86e1a79cd809eb74fc2ded26"
+    }
+  ],
+  "next_fixed_commit_candidates": [
+    {
+      "priority": 1,
+      "scene": "small_white_bottle",
+      "segment": "poc_raw_video_20260201_193100_part002",
+      "annotation_id": 21,
+      "object_name": "small white bottle",
+      "task": "small_white_bottle_right",
+      "hand_type": "right",
+      "duration_sec": 3.0,
+      "evidence": "historical 12/12; DAI relative error 0.0403m to 0.0046m; must be rerun fresh without SPIDER fallback"
+    },
+    {
+      "priority": 2,
+      "scene": "mug",
+      "segment": "poc_raw_video_20260329_154934_part003",
+      "annotation_id": 3,
+      "object_name": "mug",
+      "task": "mug_right",
+      "hand_type": "right",
+      "duration_sec": 5.25,
+      "evidence": "historical DAI relative error 0.0412m to 0.0069m; old matrix was 10/12 due SPIDER engineering gaps"
+    },
+    {
+      "priority": 3,
+      "scene": "gold_box",
+      "segment": "poc_raw_video_20260201_193100_part002",
+      "annotation_id": 3,
+      "object_name": "gold box",
+      "task": "gold_box_left",
+      "hand_type": "left",
+      "duration_sec": 3.25,
+      "evidence": "historical source reconstruction completed; old run stopped when the Ego worker failed to become ready"
+    },
+    {
+      "priority": 4,
+      "scene": "metal_bowl",
+      "segment": "poc_raw_video_20260207_204222",
+      "annotation_id": 2,
+      "object_name": "metal bowl",
+      "task": "metal_bowl_right",
+      "hand_type": "right",
+      "duration_sec": 5.25,
+      "next_action": "fresh SAM3 preflight before full run",
+      "evidence": "early/reference/late masks follow the bowl; contents create holes and make this a geometry stress candidate"
+    }
+  ],
+  "reserve_candidates": [
+    {
+      "scene": "brush",
+      "segment": "poc_raw_video_20260202_214320_part003",
+      "annotation_id": 10,
+      "reason": "historical DAI relative error 0.0654m to 0.0085m; use if a primary candidate fails preflight"
+    }
+  ],
+  "rejected_or_stress_only": [
+    {"scene": "large_white_bowl", "reason": "SAM3 switched from bowl to hand; centroid jump 131.7px and adjacent area ratio 2.135"},
+    {"scene": "white_tube", "reason": "partial mask at clip start, finger-split geometry, and prompt bbox IoU 0"},
+    {"scene": "treat_container_lid", "reason": "temporal valid ratio 0 and no prompt-frame selected object"},
+    {"scene": "small_blue_bottle", "reason": "historical hand-object distance 1.5m to 1.9m and oversized pedestal indicate coordinate/scale failure"},
+    {"scene": "blue_jar", "reason": "Ego output had no frame_data or pose_track_info"},
+    {"scene": "powder_jar", "reason": "Ego output had no matching object mesh and pose sequence"}
+  ]
+}
