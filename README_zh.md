@@ -13,11 +13,11 @@
   <a href="https://huggingface.co/datasets/inclusionAI/OpenAoE-2000h"><img src="https://img.shields.io/badge/Hugging%20Face-Dataset-FFD21E.svg" alt="Open-AoE Hugging Face 数据集"></a>
   <a href="https://www.modelscope.cn/datasets/inclusionAI/OpenAoE-2000h"><img src="https://img.shields.io/badge/ModelScope-Dataset-624AFF.svg" alt="Open-AoE ModelScope 数据集"></a>
   <img src="https://img.shields.io/static/v1?label=Capture%20App&amp;message=%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD%E6%95%B0%E9%87%87%E5%8A%A9%E6%89%8B&amp;color=2ea44f" alt="在各大应用市场搜索具身智能数采助手">
-  <a href="https://dtcoder.antdigital.com/home"><img src="https://img.shields.io/badge/Developer%20Tool-DTCoder-1677FF.svg" alt="使用 DTCoder 开发 Open-AoE 实验"></a>
+  <a href="https://dtcoder.antdigital.com/home"><img src="https://img.shields.io/badge/Developer%20Tool-AiWork-1677FF.svg" alt="使用 AiWork 开发 Open-AoE 实验"></a>
 </p>
 
 > [!TIP]
-> 第一次接触 Open-AoE？建议先阅读[数据规格](open-aoe-2000h/README.md)，用 [AoE-Visualization](aoe-visualization/README.md) 渲染一个片段，再从 [AoE-Training-Ready](aoe-training-ready/README.md) 选择目标模型的训练配方。使用 [DTCoder](https://dtcoder.antdigital.com/home) 快速启动实验。
+> 第一次接触 Open-AoE？建议先阅读[数据规格](open-aoe-2000h/README.md)，用 [AoE-Visualization](aoe-visualization/README.md) 渲染一个片段，再从 [AoE-Training-Ready](aoe-training-ready/README.md) 选择目标模型的训练配方。使用 [AiWork](https://dtcoder.antdigital.com/home) 快速启动实验。
 
 <p align="center">
   <img src="docs/fig1-open-aoe-overview.png" width="100%" alt="Open-AoE 数据集、处理流水线与开源工具链总览">
@@ -46,6 +46,25 @@ Open-AoE 是完全使用消费级智能手机采集的大规模真实世界第�
 | **训练世界模型或 Video Action Model** | [训练配方索引](aoe-training-ready/README.md) | 使用 DreamZero、LingBot-VA、Ctrl-World、iVideoGPT、GenieRedux、LAOM、AdaWorld 或 DreamDojo 适配 |
 | **重建交互场景或将人类动作映射到机器人** | [AoE-Reconstruct-Retarget](aoe-reconstruct-retarget/README.md) | 重建交互资产，并生成机器人关节轨迹、仿真结果或 robotized video |
 | **增加新模型或新机器人** | [贡献指南](CONTRIBUTING.md) | 按仓库结构和依赖规范添加自包含集成 |
+
+## 用 AiWork 开始 Open-AoE 实验
+
+[AiWork](https://dtcoder.antdigital.com/home) 是一个通过对话推进工作的桌面 AI 工作空间。你可以选择项目、启用 Skill 或专家，再用自然语言说明想做什么。使用 Open-AoE 时，从“我要找什么数据”或“要适配哪个机器人、训练什么模型”开始，逐步查看返回的文件、图表、视频和命令。
+
+![AiWork 桌面任务窗口：已选中人类数据转换专家并填写任务](docs/assets/aiwork/aiwork-conversation-window.png)
+
+*AiWork 产品界面：左侧是项目与“专家·技能”入口，右侧填写任务并选择专家。填写目标、选择专家后，即可开始对话。*
+
+### 按目标选择最佳实践
+
+| 想做什么 | 阅读哪份指南 | 可以看到什么 |
+| --- | --- | --- |
+| 找到合适的 OpenAoE 样本、检查质量、下载子集 | **Skill 最佳实践** — [中文](docs/aiwork-skill-best-practices.zh-CN.md) · [English](docs/aiwork-skill-best-practices.md) | 六步对话案例，以及样本清单、质量报告、图表、下载血缘与审阅视频示例 |
+| 把人类示范适配到机器人，或准备模型实验 | **Expert 最佳实践** — [中文](docs/aiwork-expert-best-practices.zh-CN.md) · [English](docs/aiwork-expert-best-practices.md) | 两个专家的使用流程、能力示意图、转换产物、QA 图和训练曲线 |
+
+**人类数据转换专家**负责目标机器人的轨迹与数据准备；**具身模型训练专家**负责兼容性检查和命令生成，你在自己的算力上执行训练与评测，再回传结果供专家分析。
+
+在技能中心的集市中搜索 `openaoe数据助手`；在专家社区中搜索 `人类数据转换专家` 和 `具身模型训练专家`。也可下载 [AiWork 安装包](packages/aiwork/README.md)，手动上传使用。
 
 ## 快速开始：看懂一个数据片段
 
@@ -148,7 +167,7 @@ Open-AoE/
 ├── aoe-reconstruct-retarget/ # 重建、重映射、回放与机器人叠加
 ├── aoe-training-ready/       # 模型适配、转换脚本、启动器与补丁
 ├── assets/mano/              # MANO 共享配置脚本；模型文件不纳入 Git
-├── docs/                     # 总览图与流水线图
+├── docs/                     # 总览图、流水线图与 AiWork 最佳实践
 ├── CONTRIBUTING.md
 ├── LEGAL.md
 └── LICENSE

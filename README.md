@@ -13,11 +13,11 @@
   <a href="https://huggingface.co/datasets/inclusionAI/OpenAoE-2000h"><img src="https://img.shields.io/badge/Hugging%20Face-Dataset-FFD21E.svg" alt="Open-AoE Dataset on Hugging Face"></a>
   <a href="https://www.modelscope.cn/datasets/inclusionAI/OpenAoE-2000h"><img src="https://img.shields.io/badge/ModelScope-Dataset-624AFF.svg" alt="Open-AoE Dataset on ModelScope"></a>
   <img src="https://img.shields.io/static/v1?label=Capture%20App&amp;message=%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD%E6%95%B0%E9%87%87%E5%8A%A9%E6%89%8B&amp;color=2ea44f" alt="Search for 具身智能数采助手 in major app stores">
-  <a href="https://dtcoder.antdigital.com/home"><img src="https://img.shields.io/badge/Developer%20Tool-DTCoder-1677FF.svg" alt="Develop Open-AoE experiments with DTCoder"></a>
+  <a href="https://dtcoder.antdigital.com/home"><img src="https://img.shields.io/badge/Developer%20Tool-AiWork-1677FF.svg" alt="Develop Open-AoE experiments with AiWork"></a>
 </p>
 
 > [!TIP]
-> New to Open-AoE? Start with the [data specification](open-aoe-2000h/README.md), render one segment with [AoE-Visualization](aoe-visualization/README.md), then choose a model recipe from [AoE-Training-Ready](aoe-training-ready/README.md). Use [DTCoder](https://dtcoder.antdigital.com/home) to start your experiment.
+> New to Open-AoE? Start with the [data specification](open-aoe-2000h/README.md), render one segment with [AoE-Visualization](aoe-visualization/README.md), then choose a model recipe from [AoE-Training-Ready](aoe-training-ready/README.md). Use [AiWork](https://dtcoder.antdigital.com/home) to start your experiment.
 
 <p align="center">
   <img src="docs/fig1-open-aoe-overview.png" width="100%" alt="Open-AoE dataset, processing pipeline, and open-source toolchain overview">
@@ -46,6 +46,25 @@ The technical report is available on [arXiv](https://arxiv.org/abs/2607.14183).
 | **Train a world or video-action model** | [Training recipe index](aoe-training-ready/README.md) | Use DreamZero, LingBot-VA, Ctrl-World, iVideoGPT, GenieRedux, LAOM, AdaWorld, or DreamDojo integrations |
 | **Reconstruct scenes or retarget human motion** | [AoE-Reconstruct-Retarget](aoe-reconstruct-retarget/README.md) | Reconstruct interaction assets and produce robot trajectories, simulation renders, or robotized video |
 | **Add a model or robot integration** | [Contributing guide](CONTRIBUTING.md) | Follow the repository structure and dependency rules |
+
+## Explore Open-AoE with AiWork
+
+[AiWork](https://dtcoder.antdigital.com/home) is a desktop AI workspace where you can select a project, choose a Skill or Expert, and describe a task in a conversation. For Open-AoE, start with the data you need or the robot/model you want to work with; review the returned files, charts, videos, and commands as the work progresses.
+
+![AiWork desktop task window with the Human-to-Robot Data Conversion Expert selected](docs/assets/aiwork/aiwork-conversation-window.png)
+
+*AiWork's desktop interface: projects and “Experts · Skills” on the left, with a task prompt and selected Expert in the conversation area. Compose a request, select the Expert, and start the conversation.*
+
+### Choose a guide
+
+| Goal | Guide | What to expect |
+| --- | --- | --- |
+| Find suitable OpenAoE samples, inspect quality, and download a subset | **Skill best practices** — [English](docs/aiwork-skill-best-practices.md) · [中文](docs/aiwork-skill-best-practices.zh-CN.md) | Six conversational steps with sample lists, quality reports, charts, provenance, and review-video examples |
+| Convert demonstrations for a robot or prepare a model experiment | **Expert best practices** — [English](docs/aiwork-expert-best-practices.md) · [中文](docs/aiwork-expert-best-practices.zh-CN.md) | Two Expert workflows, capability illustrations, conversion outputs, QA plots, and training curves |
+
+The **Human-to-Robot Data Conversion Expert** prepares robot-specific trajectories and data. The **Embodied Model Training Expert** checks compatibility and generates commands; you run training and evaluation on your compute and return the results for analysis.
+
+Find `openaoe数据助手` in the Skill Center Marketplace, or `人类数据转换专家` and `具身模型训练专家` in the Expert Community. For manual upload, download the [AiWork installation packages](packages/aiwork/README.md).
 
 ## Quick Start: Inspect One Segment
 
@@ -148,7 +167,7 @@ Open-AoE/
 ├── aoe-reconstruct-retarget/ # Reconstruction, retargeting, replay, and overlays
 ├── aoe-training-ready/       # Model adapters, converters, launchers, and patches
 ├── assets/mano/              # Shared MANO setup helper; model files are not tracked
-├── docs/                     # Overview and pipeline figures
+├── docs/                     # Overview figures and AiWork best-practice guides
 ├── CONTRIBUTING.md
 ├── LEGAL.md
 └── LICENSE
