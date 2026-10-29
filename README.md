@@ -1,7 +1,11 @@
 # Open-AoE
 
+<h2 align="center">
+  2,000 Hours of Smartphone-Collected Egocentric Manipulation Data<br>with a Complete Data-to-Model Toolchain
+</h2>
+
 <p align="center">
-  <strong>2,000 Hours of Smartphone-Collected Egocentric Manipulation Data<br>with a Complete Data-to-Model Toolchain</strong>
+  <sub>by Ant Digital Technologies’ Phecda Lab</sub>
 </p>
 
 <p align="center">

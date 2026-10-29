@@ -1,7 +1,11 @@
 # Open-AoE
 
+<h2 align="center">
+  2,000 小时手机采集的第一视角操作数据<br>以及完整的 Data-to-Model 工具链
+</h2>
+
 <p align="center">
-  <strong>2,000 小时手机采集的第一视角操作数据<br>以及完整的 Data-to-Model 工具链</strong>
+  <sub>蚂蚁数字科技 天玑实验室</sub>
 </p>
 
 <p align="center">
