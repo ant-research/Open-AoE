@@ -5,7 +5,7 @@
 </h2>
 
 <p align="center">
-  <sub>by Ant Digital Technologies’ Phecda Lab</sub>
+  by Ant Digital Technologies’ Phecda Lab
 </p>
 
 <p align="center">

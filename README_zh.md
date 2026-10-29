@@ -5,7 +5,7 @@
 </h2>
 
 <p align="center">
-  <sub>蚂蚁数字科技 天玑实验室</sub>
+  蚂蚁数字科技 天玑实验室
 </p>
 
 <p align="center">
